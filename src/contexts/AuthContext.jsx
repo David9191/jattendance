@@ -39,11 +39,37 @@ export const AuthContextProvider = ({ children }) => {
   };
 
   // Sign out
-  const signOut = () => {
-    const { error } = supabase.auth.signOut();
+  const signOut = async () => {
+    const { error } = await supabase.auth.signOut();
     if (error) {
       console.error('there was a problem signing out: ', error);
     }
+  };
+
+  // Get departments
+  const getDepartments = async () => {
+    try {
+      const { data, error } = await supabase.from('departments').select('*');
+
+      if (error) {
+        console.error('there was a problem signing in: ', error);
+        return { success: false, error: error.message };
+      }
+      return { success: true, data: data };
+    } catch (error) {
+      console.error('an error occurred: ', error);
+    }
+  };
+
+  // Create user in public.users
+  const createUserProfile = async (userProfile) => {
+    const { error } = await supabase.from('users').insert(userProfile);
+
+    if (error) {
+      console.error('there was a problem create user: ', error);
+      return { success: false, error };
+    }
+    return { success: true };
   };
 
   // useEffect
@@ -58,14 +84,21 @@ export const AuthContextProvider = ({ children }) => {
   }, []);
 
   return (
+    // 모든 컴포넌트에서 리렌더링 안되게 하려면 이렇게 해야함.
     <AuthContext.Provider
-      value={{ session, signUpNewUser, signInUser, signOut }}
+      value={{
+        session,
+        signUpNewUser,
+        signInUser,
+        signOut,
+        getDepartments,
+        createUserProfile,
+      }}
     >
       {children}
     </AuthContext.Provider>
   );
 };
 
-export const UserAuth = () => {
-  return useContext(AuthContext);
-};
+// 그냥 한 번 감싸주는거구나
+export const UserAuth = () => useContext(AuthContext);
