@@ -21,7 +21,7 @@ const SignIn = () => {
         navigate('/dashboard');
       }
     } catch (error) {
-      setError('an error occurred: ', error);
+      setError('an error occurred: ');
       console.error(error);
     } finally {
       setLoading(false);

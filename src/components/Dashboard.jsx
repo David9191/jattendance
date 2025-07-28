@@ -17,13 +17,13 @@ const Dashboard = () => {
   };
 
   return (
-    <>
+    <div>
       <h1>Dashboard</h1>
       <h2>Welcome, {session?.user?.email}</h2>
       <div>
         <p onClick={handleSignOut}>Sign out</p>
       </div>
-    </>
+    </div>
   );
 };
 
