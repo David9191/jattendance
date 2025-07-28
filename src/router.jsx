@@ -1,14 +1,22 @@
 import { createBrowserRouter } from 'react-router-dom';
 import App from './App';
-import SignUp from './components/SignUp';
-import SignIn from './components/SignIn';
-import Dashboard from './components/Dashboard';
+import SignUp from './pages/SignUp';
+import SignIn from './pages/SignIn';
+import Dashboard from './pages/Dashboard';
+import IsSigned from './components/IsSigned';
 import PrivateRoute from './components/PrivateRoute';
 
 export const router = createBrowserRouter([
   { path: '/', element: <App /> },
   { path: '/signup', element: <SignUp /> },
-  { path: '/signin', element: <SignIn /> },
+  {
+    path: '/signin',
+    element: (
+      <IsSigned>
+        <SignIn />
+      </IsSigned>
+    ),
+  },
   {
     path: '/dashboard',
     element: (
