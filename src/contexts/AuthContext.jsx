@@ -1,10 +1,12 @@
 import { createContext, useEffect, useState, useContext } from 'react';
 import { supabase } from '../supabase/supabaseClient';
+import { UserProfile } from './UserProfileContext';
 
 const AuthContext = createContext(null);
 
 export const AuthContextProvider = ({ children }) => {
   const [session, setSession] = useState(undefined);
+  const { setUserProfile, userProfile } = UserProfile();
 
   // Sign up
   const signUpNewUser = async (email, password) => {
@@ -23,19 +25,39 @@ export const AuthContextProvider = ({ children }) => {
   // Sign in
   const signInUser = async (email, password) => {
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: email,
-        password: password,
-      });
-
-      if (error) {
-        console.error('there was a problem signing in: ', error);
-        return { success: false, error: error.message };
+      const { data: signInUser, error: signInError } =
+        await supabase.auth.signInWithPassword({
+          email: email,
+          password: password,
+        });
+      if (signInError) {
+        console.error('there was a problem signing in: ', signInError);
+        return { success: false, error: signInError.message };
       }
-      return { success: true, data: data };
+
+      const { data: userProfile, error: userProfileError } = await supabase
+        .from('users')
+        .select()
+        .eq('id', signInUser.user.id);
+      if (userProfileError) {
+        console.error(
+          'there was a problem get userProfile: ',
+          userProfileError,
+        );
+        return { success: false, error: userProfileError.message };
+      }
+
+      const mergedUserInfo = {
+        id: signInUser.user.id,
+        ...(userProfile?.[0] || {}),
+      };
+      setUserProfile(mergedUserInfo);
+
+      return { success: true, data: mergedUserInfo };
     } catch (error) {
       console.error('an error occurred: ', error);
     }
+    console.log(userProfile);
   };
 
   // Sign out
@@ -100,5 +122,4 @@ export const AuthContextProvider = ({ children }) => {
   );
 };
 
-// 그냥 한 번 감싸주는거구나
 export const UserAuth = () => useContext(AuthContext);
