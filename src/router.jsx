@@ -5,17 +5,15 @@ import SignIn from './pages/SignIn';
 import Dashboard from './pages/Dashboard';
 import IsSigned from './components/IsSigned';
 import PrivateRoute from './components/PrivateRoute';
+import SelectDepartment from './pages/SelectDepartment';
+import CreateDepartment from './pages/CreateDepartment';
 
 export const router = createBrowserRouter([
   { path: '/', element: <App /> },
   { path: '/signup', element: <SignUp /> },
   {
     path: '/signin',
-    element: (
-      <IsSigned>
-        <SignIn />
-      </IsSigned>
-    ),
+    element: <SignIn />,
   },
   {
     path: '/dashboard',
@@ -24,5 +22,13 @@ export const router = createBrowserRouter([
         <Dashboard />
       </PrivateRoute>
     ),
+  },
+  {
+    path: '/select-department',
+    element: <SelectDepartment />,
+  },
+  {
+    path: '/create-department',
+    element: <CreateDepartment />,
   },
 ]);
