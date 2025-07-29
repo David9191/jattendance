@@ -1,6 +1,5 @@
 import { createContext, useEffect, useState, useContext } from 'react';
 import { supabase } from '../supabase/supabaseClient';
-import { UserProfile } from './UserProfileContext';
 
 const AuthContext = createContext(null);
 
@@ -24,11 +23,10 @@ export const AuthContextProvider = ({ children }) => {
   // Sign in
   const signInUser = async (email, password) => {
     try {
-      const { data: signInUser, error: signInError } =
-        await supabase.auth.signInWithPassword({
-          email: email,
-          password: password,
-        });
+      const { data: signInUser, error: signInError } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: password,
+      });
       if (signInError) {
         console.error('there was a problem signing in: ', signInError);
         return { success: false, error: signInError.message };
