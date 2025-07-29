@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { UserAuth } from '../contexts/AuthContext';
+import { UserProfile } from '../contexts/UserProfileContext';
 
 const SignUp = () => {
   const [userProfileForAuth, setUserProfileForAuth] = useState({
@@ -25,7 +26,8 @@ const SignUp = () => {
   const [loading, setLoading] = useState('');
   const [error, setError] = useState('');
 
-  const { signUpNewUser, getDepartments, createUserProfile } = UserAuth();
+  const { signUpNewUser, createUserProfile } = UserAuth();
+  const { getDepartments } = UserProfile();
   const navigate = useNavigate();
 
   const fetchDepartments = async () => {
@@ -60,21 +62,18 @@ const SignUp = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const signUpResult = await signUpNewUser(
-        userProfileForAuth?.email,
-        userProfileForAuth?.password,
-      );
-      if (!signUpResult.success)
-        alert('에러가 발생했습니다. 다시 시도해 주세요.');
+      const signUpResult = await signUpNewUser(userProfileForAuth?.email, userProfileForAuth?.password);
+      if (!signUpResult.success) alert('에러가 발생했습니다. 다시 시도해 주세요.');
 
       const createUserProfileResult = await createUserProfile({
         ...userProfile,
         id: signUpResult.data.user.id,
       });
-      if (!createUserProfileResult.success)
+      if (!createUserProfileResult.success) {
         alert('에러가 발생했습니다. 다시 시도해 주세요.');
+      }
 
-      navigate('/dashboard');
+      navigate('/signin');
     } catch (error) {
       setError('회원가입 실패');
       console.error(error);
@@ -89,10 +88,7 @@ const SignUp = () => {
 
   return (
     <>
-      <form
-        onSubmit={handleSignUp}
-        style={{ display: 'flex', flexDirection: 'column' }}
-      >
+      <form onSubmit={handleSignUp} style={{ display: 'flex', flexDirection: 'column' }}>
         <h2>Sign up</h2>
         <p>
           Already have an account?
@@ -187,9 +183,9 @@ const SignUp = () => {
             value={userProfile?.default_department_id || ''}
           >
             <option value="">부서를 선택하세요</option>
-            {departments.map((dept) => (
-              <option key={dept.id} value={dept.id}>
-                {dept.name}
+            {departments.map((department) => (
+              <option key={department.id} value={department.id}>
+                {department.name}
               </option>
             ))}
           </select>
