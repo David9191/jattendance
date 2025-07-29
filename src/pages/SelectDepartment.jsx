@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { UserAuth } from '../contexts/AuthContext';
 import { UserProfile } from '../contexts/UserProfileContext';
+import { UserDepartment } from '../contexts/DepartmentContext';
 
 const SelectDepartment = () => {
   // 내가 속한 부서를 가져온다. join으로 가져오기. 그 부서 목록을 보여준다.
@@ -11,16 +12,31 @@ const SelectDepartment = () => {
    * 이후 부서 선택 시, 그 부서에서의 역할을 추가로 유저 정보에 넣자.
    */
   const [currentUserDepartments, setCurrentUserDepartments] = useState([]);
-  const { signOut } = UserAuth();
+  const { setCurrentDepartmentInfo } = UserDepartment();
   const { getDepartments } = UserProfile();
+  const { signOut } = UserAuth();
   const navigate = useNavigate();
 
-  const handleCreateDepartmentClick = () => {
-    navigate('/create-department');
-  };
   const handleSignOutClick = () => {
     signOut();
     navigate('/signin');
+  };
+
+  const handleDepartmentClick = (e) => {
+    const { dataset } = e.currentTarget;
+    const newDepartmentInfo = {
+      id: dataset.id,
+      name: dataset.name,
+      slug: dataset.slug,
+      theme_color: dataset.themeColor,
+    };
+    // add context. depart id, name, slug
+    setCurrentDepartmentInfo(newDepartmentInfo);
+
+    console.log(dataset);
+
+    // navigate
+    navigate(`/admin/${dataset.slug}`);
   };
 
   useEffect(() => {
@@ -37,12 +53,22 @@ const SelectDepartment = () => {
   return (
     <div>
       <button onClick={handleSignOutClick}>SIGN OUT</button>
-      <div onClick={handleCreateDepartmentClick}>+</div>
-      {currentUserDepartments.map((department, i) => (
-        <div key={department.id + i} onClick={() => {}}>
-          {department?.name}
-        </div>
-      ))}
+      <Link to={'/create-department'}>+</Link>
+      {currentUserDepartments.map((department, i) => {
+        // console.log(department);
+        return (
+          <div
+            key={department.id + i}
+            data-id={department.id}
+            data-name={department.name}
+            data-slug={department.slug}
+            data-theme-color={department.theme_color}
+            onClick={handleDepartmentClick}
+          >
+            {department?.name}
+          </div>
+        );
+      })}
     </div>
   );
 };
