@@ -33,9 +33,6 @@ const SelectDepartment = () => {
     // add context. depart id, name, slug
     setCurrentDepartmentInfo(newDepartmentInfo);
 
-    console.log(dataset);
-
-    // navigate
     navigate(`/admin/${dataset.slug}`);
   };
 
@@ -53,22 +50,19 @@ const SelectDepartment = () => {
   return (
     <div>
       <button onClick={handleSignOutClick}>SIGN OUT</button>
-      <Link to={'/create-department'}>+</Link>
-      {currentUserDepartments.map((department, i) => {
-        // console.log(department);
-        return (
-          <div
-            key={department.id + i}
-            data-id={department.id}
-            data-name={department.name}
-            data-slug={department.slug}
-            data-theme-color={department.theme_color}
-            onClick={handleDepartmentClick}
-          >
-            {department?.name}
-          </div>
-        );
-      })}
+      <br />
+      {currentUserDepartments.map((department, i) => (
+        <div
+          key={department.id + i}
+          data-id={department.id}
+          data-name={department.name}
+          data-slug={department.slug}
+          data-theme-color={department.theme_color}
+          onClick={handleDepartmentClick}
+        >
+          {department?.name}
+        </div>
+      ))}
     </div>
   );
 };

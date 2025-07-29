@@ -3,10 +3,8 @@ import App from './App';
 import SignUp from './pages/SignUp';
 import SignIn from './pages/SignIn';
 import Dashboard from './pages/Dashboard';
-import IsSigned from './components/IsSigned';
 import PrivateRoute from './components/PrivateRoute';
 import SelectDepartment from './pages/SelectDepartment';
-import CreateDepartment from './pages/CreateDepartment';
 
 export const router = createBrowserRouter([
   { path: '/', element: <App /> },
@@ -28,7 +26,32 @@ export const router = createBrowserRouter([
     element: <SelectDepartment />,
   },
   {
-    path: '/create-department',
-    element: <CreateDepartment />,
+    path: '/admin/',
+    children: [
+      {
+        path: 'infant',
+        element: <Dashboard />,
+      },
+      {
+        path: 'kindergarten',
+        element: <Dashboard />,
+      },
+      {
+        path: 'children',
+        element: <Dashboard />,
+      },
+      {
+        path: 'middle-school',
+        element: <Dashboard />,
+      },
+      {
+        path: 'high-school',
+        element: <Dashboard />,
+      },
+      {
+        path: 'youth',
+        element: <Dashboard />,
+      },
+    ],
   },
 ]);
