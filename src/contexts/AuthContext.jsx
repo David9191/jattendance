@@ -6,7 +6,6 @@ const AuthContext = createContext(null);
 
 export const AuthContextProvider = ({ children }) => {
   const [session, setSession] = useState(undefined);
-  const { setUserProfile, userProfile } = UserProfile();
 
   // Sign up
   const signUpNewUser = async (email, password) => {
@@ -35,29 +34,10 @@ export const AuthContextProvider = ({ children }) => {
         return { success: false, error: signInError.message };
       }
 
-      const { data: userProfile, error: userProfileError } = await supabase
-        .from('users')
-        .select()
-        .eq('id', signInUser.user.id);
-      if (userProfileError) {
-        console.error(
-          'there was a problem get userProfile: ',
-          userProfileError,
-        );
-        return { success: false, error: userProfileError.message };
-      }
-
-      const mergedUserInfo = {
-        id: signInUser.user.id,
-        ...(userProfile?.[0] || {}),
-      };
-      setUserProfile(mergedUserInfo);
-
-      return { success: true, data: mergedUserInfo };
+      return { success: true, data: signInUser };
     } catch (error) {
       console.error('an error occurred: ', error);
     }
-    console.log(userProfile);
   };
 
   // Sign out
@@ -65,21 +45,6 @@ export const AuthContextProvider = ({ children }) => {
     const { error } = await supabase.auth.signOut();
     if (error) {
       console.error('there was a problem signing out: ', error);
-    }
-  };
-
-  // Get departments
-  const getDepartments = async () => {
-    try {
-      const { data, error } = await supabase.from('departments').select('*');
-
-      if (error) {
-        console.error('there was a problem signing in: ', error);
-        return { success: false, error: error.message };
-      }
-      return { success: true, data: data };
-    } catch (error) {
-      console.error('an error occurred: ', error);
     }
   };
 
@@ -113,7 +78,6 @@ export const AuthContextProvider = ({ children }) => {
         signUpNewUser,
         signInUser,
         signOut,
-        getDepartments,
         createUserProfile,
       }}
     >
