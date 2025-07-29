@@ -1,6 +1,7 @@
-import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import { UserAuth } from '../contexts/AuthContext';
+import { UserProfile } from '../contexts/UserProfileContext';
+import { Link, useNavigate } from 'react-router-dom';
 
 const SignIn = () => {
   const [email, setEmail] = useState('');
@@ -8,7 +9,8 @@ const SignIn = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState('');
 
-  const { signInUser } = UserAuth();
+  const { signInUser, session } = UserAuth();
+  const { setUserProfileToSession } = UserProfile();
   const navigate = useNavigate();
 
   const handleSignIn = async (e) => {
@@ -18,7 +20,9 @@ const SignIn = () => {
       const result = await signInUser(email, password);
 
       if (result.success) {
-        navigate('/dashboard');
+        console.log(result);
+        setUserProfileToSession(result.data.user.id);
+        navigate('/select-department');
       }
     } catch (error) {
       setError('an error occurred: ');
@@ -27,6 +31,12 @@ const SignIn = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (session) {
+      navigate('/select-department');
+    }
+  }, []);
 
   return (
     <>
