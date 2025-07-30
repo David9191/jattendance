@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { UserAuth } from '../contexts/AuthContext';
 import { UserProfile } from '../contexts/UserProfileContext';
 import { UserDepartment } from '../contexts/DepartmentContext';
@@ -16,6 +16,9 @@ const SelectDepartment = () => {
   const { getDepartments } = UserProfile();
   const { signOut } = UserAuth();
   const navigate = useNavigate();
+  // 이건 잠재적 문제 있음. 현재는 한 유저가 한 부서에만 종속되어 있지만
+  // 만약 한 유저가 여러 부서에 속해 있을 경우엔, 어떻게 데이터가 올 지 모름.
+  const currentUserProfile = sessionStorage.getItem('currentUserProfile');
 
   const handleSignOutClick = () => {
     signOut();
@@ -23,6 +26,7 @@ const SelectDepartment = () => {
   };
 
   const handleDepartmentClick = (e) => {
+    const isAdmin = currentUserProfile.role === 'admin' || currentUserProfile.role === 'super_admin';
     const { dataset } = e.currentTarget;
     const newDepartmentInfo = {
       id: dataset.id,
@@ -33,7 +37,11 @@ const SelectDepartment = () => {
     // add context. depart id, name, slug
     setCurrentDepartmentInfo(newDepartmentInfo);
 
-    navigate(`/admin/${dataset.slug}`);
+    if (isAdmin) {
+      navigate(`/admin/${dataset.slug}`);
+    } else {
+      navigate(`/${dataset.slug}`);
+    }
   };
 
   useEffect(() => {
