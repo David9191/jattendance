@@ -12,7 +12,7 @@ export const UserProfileContextProvider = ({ children }) => {
     const isSuperAdminRole = currentUserId.role === 'super_admin';
 
     try {
-      let query = supabase.from('departments').select('*');
+      let query = supabase.from('departments').select('*').order('id', { ascending: true });
 
       if (!isSuperAdminRole) {
         query = query.eq('user_id', currentUserId);
