@@ -19,7 +19,6 @@ const SelectDepartment = () => {
   // 이건 잠재적 문제 있음. 현재는 한 유저가 한 부서에만 종속되어 있지만
   // 만약 한 유저가 여러 부서에 속해 있을 경우엔, 어떻게 데이터가 올 지 모름.
   const currentUserProfile = JSON.parse(sessionStorage.getItem('currentUserProfile'));
-  console.log(currentUserProfile);
   const handleSignOutClick = () => {
     signOut();
     navigate('/signin');
