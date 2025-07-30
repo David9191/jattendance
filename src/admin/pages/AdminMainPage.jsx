@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-
+import { Outlet } from 'react-router-dom';
 import Sidebar from '../features/layout/components/Sidebar';
-import Dashboard from '../features/dashboard/pages/Dashboard';
 import { UserDepartment } from '../../common/contexts/DepartmentContext';
 
 const AdminMainPage = () => {
@@ -10,7 +9,7 @@ const AdminMainPage = () => {
 
   useEffect(() => {
     setCurrentDepartment(currentDepartmentInfo);
-  }, []);
+  }, [currentDepartmentInfo]);
 
   return (
     <div style={{ display: 'flex', height: '100vh', fontSize: '1.4rem' }}>
@@ -25,10 +24,10 @@ const AdminMainPage = () => {
       >
         <Sidebar />
       </div>
-      <div style={{ flex: 1 }}>
+      <main style={{ flex: 1, padding: '2rem' }}>
         <h1 style={{ marginBottom: '24px' }}>{currentDepartment.name}</h1>
-        <Dashboard />
-      </div>
+        <Outlet />
+      </main>
     </div>
   );
 };

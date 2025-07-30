@@ -2,10 +2,11 @@ import { createBrowserRouter } from 'react-router-dom';
 import App from './App';
 import SignUp from './common/pages/SignUp';
 import SignIn from './common/pages/SignIn';
-import Dashboard from './common/pages/Dashboard';
+import CommonDashboard from './common/pages/Dashboard'; // 이름 변경
 import PrivateRoute from './common/components/PrivateRoute';
 import SelectDepartment from './common/pages/SelectDepartment';
 import AdminMainPage from './admin/pages/AdminMainPage';
+import AdminDashboard from './admin/features/dashboard/pages/Dashboard'; // 이름 변경
 import UserManagement from './admin/features/users/pages/UserManagement';
 import DepartmentManagement from './admin/features/departments/pages/DepartmentManagement';
 import RoleManagement from './admin/features/roles/pages/RoleManagement';
@@ -76,53 +77,17 @@ export const router = createBrowserRouter([
     path: '/dashboard',
     element: (
       <PrivateRoute>
-        <Dashboard />
+        <CommonDashboard />
       </PrivateRoute>
     ),
   },
   {
-    // Header에 slug 별로 왼쪽에 name 박아두자.
     path: '/select-department',
     element: <SelectDepartment />,
   },
   {
-    path: '/admin/',
-    children: [
-      {
-        path: 'infant',
-        element: <AdminMainPage />,
-        children: manageList,
-      },
-      {
-        path: 'kindergarten',
-        element: <AdminMainPage />,
-        children: manageList,
-      },
-      {
-        path: 'elementary',
-        element: <AdminMainPage />,
-        children: manageList,
-      },
-      {
-        path: 'children',
-        element: <AdminMainPage />,
-        children: manageList,
-      },
-      {
-        path: 'middle-school',
-        element: <AdminMainPage />,
-        children: manageList,
-      },
-      {
-        path: 'high-school',
-        element: <AdminMainPage />,
-        children: manageList,
-      },
-      {
-        path: 'youth',
-        element: <AdminMainPage />,
-        children: manageList,
-      },
-    ],
+    path: '/admin/:departmentSlug',
+    element: <AdminMainPage />,
+    children: [{ index: true, element: <AdminDashboard /> }, ...manageList],
   },
 ]);
