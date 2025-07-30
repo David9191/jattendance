@@ -41,7 +41,6 @@ export const UserProfileContextProvider = ({ children }) => {
 
       if (error) throw error;
 
-      console.log(data);
       sessionStorage.setItem('currentUserProfile', JSON.stringify(data[0], null, 2));
       if (error) throw error;
     } catch (error) {

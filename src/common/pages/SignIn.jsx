@@ -20,7 +20,6 @@ const SignIn = () => {
       const result = await signInUser(email, password);
 
       if (result.success) {
-        console.log(result);
         setUserProfileToSession(result.data.user.id);
         navigate('/select-department');
       }

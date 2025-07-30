@@ -94,9 +94,7 @@ const Dashboard = () => {
       .map((item) => item.users)
       .filter((user) => {
         if (!user || !user.birthday) return false;
-        console.log(user);
         const birthDate = new Date(user.birthday);
-        console.log(birthDate);
         return birthDate.getUTCMonth() === currentMonth;
       });
 
