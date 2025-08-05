@@ -20,6 +20,26 @@ export const AuthContextProvider = ({ children }) => {
     return { success: true, data };
   };
 
+  // Create user in public.users
+  const createUserProfile = async (userProfile) => {
+    const { email: _, password: __, ...newUserProfile } = userProfile;
+
+    const { error } = await supabase.from('users').insert(newUserProfile);
+    const { error: insertError } = await supabase.from('department_memberships').insert({
+      user_id: userProfile.id,
+      department_id: userProfile.default_department_id,
+    });
+
+    if (error) {
+      console.error('there was a problem create user: ', error);
+      return { success: false, error };
+    } else if (insertError) {
+      console.error('there was a problem insert to department_memberships: ', insertError);
+      return { success: false, insertError };
+    }
+    return { success: true };
+  };
+
   // Sign in
   const signInUser = async (email, password) => {
     try {
@@ -44,17 +64,6 @@ export const AuthContextProvider = ({ children }) => {
     if (error) {
       console.error('there was a problem signing out: ', error);
     }
-  };
-
-  // Create user in public.users
-  const createUserProfile = async (userProfile) => {
-    const { error } = await supabase.from('users').insert(userProfile);
-
-    if (error) {
-      console.error('there was a problem create user: ', error);
-      return { success: false, error };
-    }
-    return { success: true };
   };
 
   // useEffect
