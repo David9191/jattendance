@@ -13,7 +13,7 @@ const SelectDepartment = () => {
    */
   const [currentUserDepartments, setCurrentUserDepartments] = useState([]);
   const { setCurrentDepartmentInfo } = UserDepartment();
-  const { getDepartments } = UserProfile();
+  const { getDepartmentsByRole } = UserProfile();
   const { signOut } = UserAuth();
   const navigate = useNavigate();
   // 이건 잠재적 문제 있음. 현재는 한 유저가 한 부서에만 종속되어 있지만
@@ -45,7 +45,7 @@ const SelectDepartment = () => {
 
   useEffect(() => {
     const fetchDepartments = async () => {
-      const { success, data } = await getDepartments();
+      const { success, data } = await getDepartmentsByRole();
 
       if (success) {
         setCurrentUserDepartments(data);
