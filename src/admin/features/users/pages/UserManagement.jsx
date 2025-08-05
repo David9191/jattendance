@@ -3,10 +3,11 @@ import { UserDepartment } from '../../../../common/contexts/DepartmentContext';
 import { getAverageAttendanceRate, getUserList, getMonthlyBirthdayMembers } from '../services/getUserList';
 
 const UserManagement = () => {
-  const [pageInfo, setPageInfo] = useState({
+  const [pageNationInfo, setPageNationInfo] = useState({
     currentPage: 1,
     pageSize: 20,
     totalPage: 0,
+    pageNationBlockSize: 10,
   });
   const [searchForUserName, setSearchForUserName] = useState('');
   const [userList, setUserList] = useState({ users: [], count: 0 });
@@ -30,7 +31,7 @@ const UserManagement = () => {
   };
 
   const handlePageChange = () => {
-    setPageInfo({ ...pageInfo, currentPage: pageInfo.currentPage - 1 });
+    setPageNationInfo({ ...pageNationInfo, currentPage: pageNationInfo.currentPage - 1 });
   };
 
   useEffect(() => {
@@ -39,7 +40,7 @@ const UserManagement = () => {
       const departmentId = currentDepartmentInfo.id;
       try {
         const [userList, attendanceData, monthlyBirthdayMembers] = await Promise.all([
-          getUserList(departmentId, pageInfo.currentPage, pageInfo.pageSize),
+          getUserList(departmentId, pageNationInfo.currentPage, pageNationInfo.pageSize),
           getAverageAttendanceRate(departmentId),
           getMonthlyBirthdayMembers(departmentId),
         ]);
@@ -51,9 +52,9 @@ const UserManagement = () => {
           attendance: { total_members, average_attendees, attendance_rate },
           birthdayMembers: monthlyBirthdayMembers,
         }));
-        setPageInfo({
-          ...pageInfo,
-          totalPage: Math.ceil(userList.count / pageInfo.pageSize),
+        setPageNationInfo({
+          ...pageNationInfo,
+          totalPage: Math.ceil(userList.count / pageNationInfo.pageSize),
         });
       } catch (error) {
         console.error(error);
@@ -61,7 +62,7 @@ const UserManagement = () => {
     };
 
     setInitData();
-  }, [currentDepartmentInfo.id, pageInfo, pageInfo.pageSize]);
+  }, [currentDepartmentInfo.id, pageNationInfo, pageNationInfo.pageSize]);
 
   return (
     <div>
@@ -114,7 +115,7 @@ const UserManagement = () => {
 
       <section className="user-list-container">
         <ul>
-          {userList.users.map((user, i) => (
+          {userList?.users?.map((user, i) => (
             // 사진, 이름, 성별, 역할, 속한 그룹, 핸드폰 번호, 출석률
             <li key={i} className="each-user" style={{ display: 'flex', flexDirection: 'row' }}>
               <img src="" alt="" />
@@ -133,15 +134,19 @@ const UserManagement = () => {
         className="pagination-container"
         style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '2rem' }}
       >
-        <button onClick={handlePageChange} disabled={pageInfo.currentPage === 1}>
+        <button onClick={handlePageChange} disabled={pageNationInfo.currentPage === 1}>
           이전
         </button>
         {/**
          * total: 55명
          * pageSize: 10.
          * totalPage = 55 / 10 = Math.ceil(5.5)
+         *
          */}
-        <button onClick={handlePageChange} disabled={pageInfo.currentPage >= userList.count / pageInfo.pageSize}>
+        <button
+          onClick={handlePageChange}
+          disabled={pageNationInfo.currentPage >= userList.count / pageNationInfo.pageSize}
+        >
           다음
         </button>
       </section>
