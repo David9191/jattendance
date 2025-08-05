@@ -9,24 +9,20 @@ const Sidebar = () => {
       path: 'manage/user',
       icon: '<FaIcons.FaCartPlus />',
       cName: 'nav-text',
-      // {
-      //   title: '출석 관리',
-      //   path: 'manage/attendance',
-      //   icon: '<FaIcons.FaCartPlus />',
-      //   cName: 'nav-text',
-      // },
+      children: [
+        { title: '전체 유저 목록', path: 'manage/user/attendance', icon: '<FaIcons.FaCartPlus />', cName: 'nav-text' },
+        { title: '유저 출석 관리', path: 'manage/user/attendance', icon: '<FaIcons.FaCartPlus />', cName: 'nav-text' },
+        { title: '유저 승인 관리', path: 'manage/user/approvals', icon: '<FaIcons.FaCartPlus />', cName: 'nav-text' },
+      ],
     },
     {
       title: '부서 관리',
       path: 'manage/department',
       icon: '<FaIcons.FaCartPlus />',
       cName: 'nav-text',
-      // {
-      //   title: '그룹 관리',
-      //   path: 'manage/group',
-      //   icon: '<FaIcons.FaCartPlus />',
-      //   cName: 'nav-text',
-      // },
+      children: [
+        { title: '그룹 관리', path: 'manage/department/group', icon: '<FaIcons.FaCartPlus />', cName: 'nav-text' },
+      ],
     },
     {
       title: '역할 관리',
@@ -102,6 +98,17 @@ const Sidebar = () => {
               onClick={handleManagementClick}
             >
               {manageSomething.title}
+              {manageSomething.children ? (
+                <ul style={{ marginLeft: '2rem' }}>
+                  {manageSomething.children.map((children, i) => (
+                    <li key={i} className={children.cName} data-path={children.path} onClick={handleManagementClick}>
+                      {children.title}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <></>
+              )}
             </li>
           );
         })}
