@@ -7,17 +7,32 @@ export const UserProfileContextProvider = ({ children }) => {
   const [userProfile, setUserProfile] = useState({});
 
   // Get departments
-  const getDepartments = async () => {
+  const geAllDepartments = async () => {
+    try {
+      const { data, error } = await supabase.from('departments').select('*').order('id', { ascending: true });
+
+      if (error) {
+        console.error('there was a problem signing in: ', error);
+        return { success: false, error: error.message };
+      }
+      return { success: true, data: data };
+    } catch (error) {
+      console.error('an error occurred: ', error);
+    }
+  };
+
+  /**
+   * 유저의 역할에 따라 부서를 불러오는 코드
+   */
+  const getDepartmentsByRole = async () => {
     const currentUserId = JSON.parse(sessionStorage.getItem('currentUserProfile'));
-    const isSuperAdminRole = currentUserId.role === 'super_admin';
+    const isSuperAdminRole = currentUserId?.role === 'super_admin';
+    if (!isSuperAdminRole) {
+      return { success: false, error: '슈퍼 관리자가 아닙니다.' };
+    }
 
     try {
-      let query = supabase.from('departments').select('*').order('id', { ascending: true });
-
-      if (!isSuperAdminRole) {
-        query = query.eq('user_id', currentUserId);
-      }
-      const { data, error } = await query;
+      const { data, error } = await supabase.from('departments').select('*').order('id', { ascending: true });
 
       if (error) {
         console.error('there was a problem signing in: ', error);
@@ -54,7 +69,8 @@ export const UserProfileContextProvider = ({ children }) => {
         userProfile,
         setUserProfile,
         setUserProfileToSession,
-        getDepartments,
+        getDepartmentsByRole,
+        geAllDepartments,
       }}
     >
       {children}
