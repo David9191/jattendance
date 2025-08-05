@@ -4,11 +4,9 @@ import { UserAuth } from '../contexts/AuthContext';
 import { UserProfile } from '../contexts/UserProfileContext';
 
 const SignUp = () => {
-  const [userProfileForAuth, setUserProfileForAuth] = useState({
+  const [userProfile, setUserProfile] = useState({
     email: '',
     password: '',
-  });
-  const [userProfile, setUserProfile] = useState({
     default_department_id: null,
     name: '',
     phone: '',
@@ -27,12 +25,12 @@ const SignUp = () => {
   const [error, setError] = useState('');
 
   const { signUpNewUser, createUserProfile } = UserAuth();
-  const { getDepartments } = UserProfile();
+  const { geAllDepartments } = UserProfile();
   const navigate = useNavigate();
 
   const fetchDepartments = async () => {
     try {
-      const result = await getDepartments();
+      const result = await geAllDepartments();
       if (result.success) {
         setDepartments(result.data);
       } else {
@@ -42,13 +40,6 @@ const SignUp = () => {
       setError('부서 목록을 가져오는데 오류가 발생했습니다.');
       console.error(error);
     }
-  };
-
-  const handleAuthInputChange = (e) => {
-    setUserProfileForAuth({
-      ...userProfileForAuth,
-      [e.target.name]: e.target.value,
-    });
   };
 
   const handleUserProfileInputChange = (e) => {
@@ -62,8 +53,11 @@ const SignUp = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const signUpResult = await signUpNewUser(userProfileForAuth?.email, userProfileForAuth?.password);
-      if (!signUpResult.success) alert('에러가 발생했습니다. 다시 시도해 주세요.');
+      const signUpResult = await signUpNewUser(userProfile?.email, userProfile?.password);
+      if (!signUpResult.success) {
+        alert('에러가 발생했습니다. 다시 시도해 주세요.');
+        return;
+      }
 
       const createUserProfileResult = await createUserProfile({
         ...userProfile,
@@ -71,6 +65,7 @@ const SignUp = () => {
       });
       if (!createUserProfileResult.success) {
         alert('에러가 발생했습니다. 다시 시도해 주세요.');
+        return;
       }
 
       navigate('/signin');
@@ -97,21 +92,21 @@ const SignUp = () => {
         </p>
         <div className="input-container">
           <input
-            onChange={handleAuthInputChange}
+            onChange={handleUserProfileInputChange}
             className="input"
             type="email"
             placeholder="이메일"
             autoComplete="true"
-            value={userProfileForAuth?.email}
+            value={userProfile?.email}
             name="email"
           />
           <input
-            onChange={handleAuthInputChange}
+            onChange={handleUserProfileInputChange}
             className="input"
             type="password"
             placeholder="비밀번호"
             autoComplete="true"
-            value={userProfileForAuth?.password}
+            value={userProfile?.password}
             name="password"
           />
           <input
