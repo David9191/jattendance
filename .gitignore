@@ -28,3 +28,4 @@ dist-ssr
 GEMINI.md
 gemini
 *.playground.js
+tests
