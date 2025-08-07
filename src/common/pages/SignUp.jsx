@@ -24,7 +24,7 @@ const SignUp = () => {
   const [departments, setDepartments] = useState([]);
   const [error, setError] = useState('');
 
-  const { signUpNewUser } = UserAuth();
+  const { signUpNewUser, signOut } = UserAuth();
   const { geAllDepartments } = UserProfile();
   const navigate = useNavigate();
 
@@ -45,6 +45,7 @@ const SignUp = () => {
       }
 
       alert('회원가입이 완료되었습니다.');
+      await signOut();
       navigate('/signin');
     } catch (error) {
       setError('회원가입 실패');
@@ -185,7 +186,7 @@ const SignUp = () => {
             type="submit"
             // disabled={}
           >
-            Sign up
+            회원가입
           </button>
           {error ? <p>{error}</p> : <p></p>}
         </div>
