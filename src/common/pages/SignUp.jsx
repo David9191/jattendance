@@ -185,8 +185,6 @@ const SignUp = () => {
               </option>
             ))}
           </select>
-          <br />
-          <br />
           <button type="submit" disabled={loading}>
             Sign up
           </button>

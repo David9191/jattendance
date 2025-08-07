@@ -57,7 +57,6 @@ const SelectDepartment = () => {
   return (
     <div>
       <button onClick={handleSignOutClick}>SIGN OUT</button>
-      <br />
       {currentUserDepartments.map((department, i) => (
         <div
           key={department.id + i}

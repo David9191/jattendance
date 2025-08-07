@@ -48,7 +48,6 @@ const SignIn = () => {
         <p>
           <Link to={'/signup'}>회원가입</Link>
         </p>
-        <br />
         <div className="input-container">
           <input
             onChange={(e) => setEmail(e.target.value)}
