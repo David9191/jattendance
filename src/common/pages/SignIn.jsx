@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { UserAuth } from '../contexts/AuthContext';
-import { UserProfile } from '../contexts/UserProfileContext';
 import { Link, useNavigate } from 'react-router-dom';
 import '../css/signIn.css';
 
@@ -8,35 +7,31 @@ const SignIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState('');
 
-  const { signInUser, session } = UserAuth();
-  const { setUserProfileToSession } = UserProfile();
+  const { signIn, session } = UserAuth();
   const navigate = useNavigate();
 
   const handleSignIn = async (e) => {
     e.preventDefault();
-    setLoading(true);
     try {
-      const result = await signInUser(email, password);
+      const signInResult = await signIn(email, password);
 
-      if (!result.success) {
+      if (!signInResult.success) {
         alert('로그인에 실패하였습니다.\n다시 시도해 주세요.');
         return;
       }
-      setUserProfileToSession(result.data.user.id);
+
       navigate('/select-department');
     } catch (error) {
       setError('an error occurred: ');
       console.error(error);
-    } finally {
-      setLoading(false);
     }
   };
 
   useEffect(() => {
     if (session) {
-      navigate('/select-department');
+      console.log(session);
+      // navigate('/select-department');
     }
   }, []);
 
@@ -65,8 +60,11 @@ const SignIn = () => {
             autoComplete="true"
             value={password}
           />
-          <button type="submit" disabled={loading}>
-            Sign In
+          <button
+            type="submit"
+            // disabled={loading}
+          >
+            로그인
           </button>
           {error && <p>{error}</p>}
         </div>
