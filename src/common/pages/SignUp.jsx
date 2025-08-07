@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { UserAuth } from '../contexts/AuthContext';
 import { UserProfile } from '../contexts/UserProfileContext';
+import '../css/signUp.css';
 
 const SignUp = () => {
   const [userProfile, setUserProfile] = useState({
@@ -82,13 +83,12 @@ const SignUp = () => {
   }, []);
 
   return (
-    <>
+    <div className="fade-in-element">
       <form onSubmit={handleSignUp} style={{ display: 'flex', flexDirection: 'column' }}>
-        <h2>Sign up</h2>
-        <p>
-          Already have an account?
-          <br />
-          <Link to="/signin">Sign in!</Link>
+        <h2>회원가입</h2>
+        <p>이미 계정이 있으신가요?</p>
+        <p style={{ marginBottom: '1rem' }}>
+          <Link to="/signin">로그인 하러 가기</Link>
         </p>
         <div className="input-container">
           <input
@@ -134,25 +134,26 @@ const SignUp = () => {
             value={userProfile?.birth_date}
             name="birth_date"
           />
-          <br></br>
-          <input
-            type="radio"
-            className="input-radio"
-            name="gender"
-            id="male"
-            value="male"
-            onChange={handleUserProfileInputChange}
-          />
-          <label htmlFor="male">남자</label>
-          <input
-            type="radio"
-            className="input-radio"
-            name="gender"
-            id="female"
-            value="female"
-            onChange={handleUserProfileInputChange}
-          />
-          <label htmlFor="female">여자</label>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1.2rem', flexWrap: 'wrap' }}>
+            <input
+              type="radio"
+              className="input-radio"
+              name="gender"
+              id="male"
+              value="male"
+              onChange={handleUserProfileInputChange}
+            />
+            <label htmlFor="male">남자</label>
+            <input
+              type="radio"
+              className="input-radio"
+              name="gender"
+              id="female"
+              value="female"
+              onChange={handleUserProfileInputChange}
+            />
+            <label htmlFor="female">여자</label>
+          </div>
           <input
             onChange={handleUserProfileInputChange}
             className="input"
@@ -192,7 +193,7 @@ const SignUp = () => {
           {error ? <p>{error}</p> : <p></p>}
         </div>
       </form>
-    </>
+    </div>
   );
 };
 

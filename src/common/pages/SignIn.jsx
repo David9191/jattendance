@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { UserAuth } from '../contexts/AuthContext';
 import { UserProfile } from '../contexts/UserProfileContext';
 import { Link, useNavigate } from 'react-router-dom';
+import '../css/signIn.css';
 
 const SignIn = () => {
   const [email, setEmail] = useState('');
@@ -19,10 +20,12 @@ const SignIn = () => {
     try {
       const result = await signInUser(email, password);
 
-      if (result.success) {
-        setUserProfileToSession(result.data.user.id);
-        navigate('/select-department');
+      if (!result.success) {
+        alert('로그인에 실패하였습니다.\n다시 시도해 주세요.');
+        return;
       }
+      setUserProfileToSession(result.data.user.id);
+      navigate('/select-department');
     } catch (error) {
       setError('an error occurred: ');
       console.error(error);
@@ -38,21 +41,14 @@ const SignIn = () => {
   }, []);
 
   return (
-    <>
+    <div className="fade-in-element">
       <form onSubmit={handleSignIn}>
-        <h2>Sign In</h2>
-        <br />
+        <h2>로그인</h2>
+        <p>계정이 없으신가요?</p>
         <p>
-          Don't have an account? click here!
-          <br />
-          <Link to={'/signup'}>Sign Up</Link>
+          <Link to={'/signup'}>회원가입</Link>
         </p>
         <br />
-        <p>
-          Do you want to go to Dashboard? click here!
-          <br />
-          <Link to={'/dashboard'}>Dashboard</Link>
-        </p>
         <div className="input-container">
           <input
             onChange={(e) => setEmail(e.target.value)}
@@ -76,7 +72,7 @@ const SignIn = () => {
           {error && <p>{error}</p>}
         </div>
       </form>
-    </>
+    </div>
   );
 };
 

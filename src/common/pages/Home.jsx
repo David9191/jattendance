@@ -1,12 +1,14 @@
 import React from 'react';
 import { getRandomVerse } from '../data/bibleVerses';
 import { Link } from 'react-router-dom';
+import '../css/fadeInAnimation.css';
+import '../css/home.css';
 
 const Home = () => {
   const { verse, book, chapter, verseNumber, version } = getRandomVerse();
 
   return (
-    <>
+    <div className="fade-in-element">
       <div className="bible-verse">
         <h1>샬롬!</h1>
         <p>To. 사랑하는 하나님의 자녀</p>
@@ -25,7 +27,7 @@ const Home = () => {
         <Link to={'/signin'}>로그인</Link>
         <Link to={'/signin'}>출석체크</Link>
       </div>
-    </>
+    </div>
   );
 };
 

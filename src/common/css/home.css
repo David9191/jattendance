@@ -1,0 +1,92 @@
+body {
+  background: #181a1b;
+  color: #f1f1f1;
+  min-height: 100vh;
+  margin: 0;
+  font-family: 'Segoe UI', 'Pretendard', 'Apple SD Gothic Neo', Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.fade-in-element {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.bible-verse {
+  background: #23272a;
+  border-radius: 18px;
+  padding: 2.5rem 2rem 2rem 2rem;
+  margin-bottom: 2.5rem;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
+  text-align: center;
+}
+
+.bible-verse h1 {
+  margin-bottom: 0.5rem;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #e0e0e0;
+}
+
+.bible-verse p {
+  margin: 0.5rem 0;
+  font-size: 1.1rem;
+  color: #bdbdbd;
+}
+
+.bible-verse > div > p {
+  font-size: 1.25rem;
+  color: #f1f1f1;
+  margin-bottom: 0.3rem;
+}
+
+.bible-verse > div > div > p {
+  font-size: 1rem;
+  color: #8ab4f8;
+}
+
+.move-to-where {
+  display: flex;
+  gap: 1.2rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.move-to-where a {
+  background: #23272a;
+  color: #8ab4f8;
+  border: none;
+  border-radius: 8px;
+  padding: 0.7rem 1.6rem;
+  font-size: 1.05rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  outline: none;
+  display: inline-block;
+}
+
+.move-to-where a:hover,
+.move-to-where a:focus {
+  background: #31363b;
+  color: #e3eaff;
+  box-shadow: 0 4px 16px rgba(138, 180, 248, 0.1);
+  cursor: pointer;
+}
+
+@media (max-width: 600px) {
+  .bible-verse {
+    padding: 1.2rem 0.7rem 1rem 0.7rem;
+    font-size: 0.95rem;
+  }
+  .move-to-where {
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+}
