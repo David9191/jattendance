@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import { UserDepartment } from '../../common/contexts/DepartmentContext';
-import Sidebar from '../components/Sidebar';
+import AdminSidebar from '../components/AdminSidebar';
 
 const AdminMainPage = () => {
   const [currentDepartment, setCurrentDepartment] = useState({});
@@ -22,7 +22,7 @@ const AdminMainPage = () => {
           boxShadow: '2px 0 8px rgba(0,0,0,0.03)',
         }}
       >
-        <Sidebar />
+        <AdminSidebar />
       </div>
       <main style={{ flex: 1, padding: '2rem' }}>
         <h1 style={{ marginBottom: '24px' }}>{currentDepartment.name}</h1>
