@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
-import Sidebar from '../features/layout/components/Sidebar';
 import { UserDepartment } from '../../common/contexts/DepartmentContext';
+import Sidebar from '../components/Sidebar';
 
 const AdminMainPage = () => {
   const [currentDepartment, setCurrentDepartment] = useState({});
