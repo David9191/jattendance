@@ -22,26 +22,11 @@ const SignUp = () => {
     oauth_metadata: {},
   });
   const [departments, setDepartments] = useState([]);
-  const [loading, setLoading] = useState('');
   const [error, setError] = useState('');
 
-  const { signUpNewUser, createUserProfile } = UserAuth();
+  const { signUpNewUser } = UserAuth();
   const { geAllDepartments } = UserProfile();
   const navigate = useNavigate();
-
-  const fetchDepartments = async () => {
-    try {
-      const result = await geAllDepartments();
-      if (result.success) {
-        setDepartments(result.data);
-      } else {
-        setError('부서 목록을 가져오는데 실패했습니다.');
-      }
-    } catch (error) {
-      setError('부서 목록을 가져오는데 오류가 발생했습니다.');
-      console.error(error);
-    }
-  };
 
   const handleUserProfileInputChange = (e) => {
     setUserProfile({
@@ -52,33 +37,36 @@ const SignUp = () => {
 
   const handleSignUp = async (e) => {
     e.preventDefault();
-    setLoading(true);
     try {
-      const signUpResult = await signUpNewUser(userProfile?.email, userProfile?.password);
-      if (!signUpResult.success) {
-        alert('에러가 발생했습니다. 다시 시도해 주세요.');
+      const { success } = await signUpNewUser(userProfile);
+      if (!success) {
+        alert('에러가 발생했습니다. 다시 시도해 주세요.', error);
         return;
       }
 
-      const createUserProfileResult = await createUserProfile({
-        ...userProfile,
-        id: signUpResult.data.user.id,
-      });
-      if (!createUserProfileResult.success) {
-        alert('에러가 발생했습니다. 다시 시도해 주세요.');
-        return;
-      }
-
+      alert('회원가입이 완료되었습니다.');
       navigate('/signin');
     } catch (error) {
       setError('회원가입 실패');
       console.error(error);
-    } finally {
-      setLoading(false);
     }
   };
 
   useEffect(() => {
+    const fetchDepartments = async () => {
+      try {
+        const result = await geAllDepartments();
+        if (result.success) {
+          setDepartments(result.data);
+        } else {
+          setError('부서 목록을 가져오는데 실패했습니다.');
+        }
+      } catch (error) {
+        setError('부서 목록을 가져오는데 오류가 발생했습니다.');
+        console.error(error);
+      }
+    };
+
     fetchDepartments();
   }, []);
 
@@ -99,6 +87,7 @@ const SignUp = () => {
             autoComplete="true"
             value={userProfile?.email}
             name="email"
+            required
           />
           <input
             onChange={handleUserProfileInputChange}
@@ -108,6 +97,7 @@ const SignUp = () => {
             autoComplete="true"
             value={userProfile?.password}
             name="password"
+            required
           />
           <input
             onChange={handleUserProfileInputChange}
@@ -117,6 +107,7 @@ const SignUp = () => {
             autoComplete="true"
             value={userProfile?.name}
             name="name"
+            required
           />
           <input
             type="tel"
@@ -126,6 +117,7 @@ const SignUp = () => {
             value={userProfile?.phone}
             name="phone"
             onChange={handleUserProfileInputChange}
+            required
           />
           <input
             type="date"
@@ -133,6 +125,7 @@ const SignUp = () => {
             className="input"
             value={userProfile?.birth_date}
             name="birth_date"
+            required
           />
           <div style={{ display: 'flex', alignItems: 'center', gap: '1.2rem', flexWrap: 'wrap' }}>
             <input
@@ -142,6 +135,7 @@ const SignUp = () => {
               id="male"
               value="male"
               onChange={handleUserProfileInputChange}
+              required
             />
             <label htmlFor="male">남자</label>
             <input
@@ -151,6 +145,7 @@ const SignUp = () => {
               id="female"
               value="female"
               onChange={handleUserProfileInputChange}
+              required
             />
             <label htmlFor="female">여자</label>
           </div>
@@ -177,6 +172,7 @@ const SignUp = () => {
             className="input"
             name="default_department_id"
             value={userProfile?.default_department_id || ''}
+            required
           >
             <option value="">부서를 선택하세요</option>
             {departments.map((department) => (
@@ -185,7 +181,10 @@ const SignUp = () => {
               </option>
             ))}
           </select>
-          <button type="submit" disabled={loading}>
+          <button
+            type="submit"
+            // disabled={}
+          >
             Sign up
           </button>
           {error ? <p>{error}</p> : <p></p>}
