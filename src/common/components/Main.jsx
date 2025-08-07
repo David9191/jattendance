@@ -2,9 +2,9 @@ import React from 'react';
 import { getRandomVerse } from '../data/bibleVerses';
 import { Link } from 'react-router-dom';
 import '../css/fadeInAnimation.css';
-import '../css/home.css';
+import '../css/main.css';
 
-const Home = () => {
+const Main = () => {
   const { verse, book, chapter, verseNumber, version } = getRandomVerse();
 
   return (
@@ -31,4 +31,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Main;
