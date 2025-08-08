@@ -20,7 +20,6 @@ const SignIn = () => {
         alert('로그인에 실패하였습니다.\n다시 시도해 주세요.');
         return;
       }
-      // console.log(signInResult);
       navigate('/select-department');
     } catch (error) {
       setError('an error occurred: ');
