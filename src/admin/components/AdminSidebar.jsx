@@ -17,7 +17,7 @@ const Sidebar = () => {
       icon: '<FaIcons.FaCartPlus />',
       cName: 'nav-text',
       children: [
-        { title: '전체 유저 목록', path: 'manage/user/attendance', icon: '<FaIcons.FaCartPlus />', cName: 'nav-text' },
+        { title: '전체 유저 목록', path: 'manage/user/', icon: '<FaIcons.FaCartPlus />', cName: 'nav-text' },
         { title: '유저 출석 관리', path: 'manage/user/attendance', icon: '<FaIcons.FaCartPlus />', cName: 'nav-text' },
         { title: '유저 승인 관리', path: 'manage/user/approvals', icon: '<FaIcons.FaCartPlus />', cName: 'nav-text' },
       ],
