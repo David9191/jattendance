@@ -139,11 +139,7 @@ const Dashboard = () => {
         <div className="dashboard-card col-12 col-4 long-absentees-container">
           <h1>장결자</h1>
           <ul className="dashboard-list">
-            {longAbsentees.length > 0 ? (
-              longAbsentees.map((user, i) => <li key={i}>{user.name}</li>)
-            ) : (
-              <p className="dashboard-empty">없음</p>
-            )}
+            {longAbsentees.length > 0 ? longAbsentees.map((user, i) => <li key={i}>{user.name}</li>) : <></>}
           </ul>
         </div>
         <div className="dashboard-card col-12 col-4 new-members-container">
