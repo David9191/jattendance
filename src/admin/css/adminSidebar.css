@@ -7,13 +7,12 @@
 }
 
 .admin-sidebar__menu {
-  list-style: none;
-  margin: 0;
-  padding: 16px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  overflow: auto;
+  gap: 0.5rem;
+  padding: 2rem;
+  list-style: none;
+  height: 100vh;
 }
 
 .admin-sidebar__item {

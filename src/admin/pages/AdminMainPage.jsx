@@ -12,14 +12,16 @@ const AdminMainPage = () => {
       <aside className="admin-layout__sidebar">
         <AdminSidebar />
       </aside>
-      <main className="admin-layout__main">
+      <div className="">
         <header className="admin-layout__header">
           <h1 className="admin-layout__title">{currentDepartmentInfo?.name ?? '관리자'}</h1>
         </header>
-        <section className="admin-layout__content">
-          <Outlet />
-        </section>
-      </main>
+        <main className="admin-layout__main">
+          <section className="admin-layout__content">
+            <Outlet />
+          </section>
+        </main>
+      </div>
     </div>
   );
 };

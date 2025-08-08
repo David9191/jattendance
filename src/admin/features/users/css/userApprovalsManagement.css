@@ -1,0 +1,115 @@
+/* User Approvals - Clean Modern Dark List */
+
+.approvals-list {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background-color: var(--surface-0);
+  overflow: hidden;
+  min-height: 80vh;
+}
+
+.approvals-list__header,
+.approvals-list__row {
+  display: grid;
+  grid-template-columns: 0.8fr 0.8fr 0.8fr 1.2fr 1.2fr 0.8fr 1fr 1fr;
+  gap: 8px;
+  align-items: center;
+  padding: 1.2rem 1rem;
+}
+
+.approvals-list__header div,
+.approvals-list__row div {
+  display: flex;
+  justify-content: center;
+}
+
+.approvals-list__header {
+  background-color: rgba(255, 255, 255, 0.04);
+  border-bottom: 1px solid var(--border);
+  color: var(--text-1);
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.approvals-list__row {
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
+}
+
+.approvals-list__row:last-child {
+  border-bottom: none;
+}
+
+.user-avatar {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 999px;
+  background-color: rgba(255, 255, 255, 0.08);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-0);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.user-name {
+  color: var(--text-0);
+  font-weight: 600;
+}
+.user-gender {
+  color: var(--text-1);
+  text-transform: capitalize;
+}
+.user-phone,
+.user-birth,
+.user-requested-at {
+  color: var(--text-1);
+  font-variant-numeric: tabular-nums;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  font-size: 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background-color: rgba(255, 255, 255, 0.04);
+  color: var(--text-0);
+  width: max-content;
+}
+.badge--pending {
+  border-color: rgba(234, 179, 8, 0.35);
+  background-color: rgba(234, 179, 8, 0.08);
+}
+
+.user-actions {
+  display: inline-flex;
+  gap: 8px;
+}
+.btn-ghost {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-0);
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color 140ms ease, color 140ms ease;
+}
+.btn-ghost:hover {
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .approvals-list__header,
+  .approvals-list__row {
+    grid-template-columns: 40px 1.5fr 1fr 1fr 1fr 120px;
+  }
+  .hide-sm {
+    display: none;
+  }
+}

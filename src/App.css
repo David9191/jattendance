@@ -8,14 +8,6 @@
   justify-content: space-between;
 }
 
-header,
-footer {
-  background: rgba(30, 32, 34, 0.92);
-  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.18);
-  border-radius: 0 0 18px 18px;
-  padding: 1.2rem 2.5rem;
-}
-
 main {
   flex: 1;
   display: flex;
@@ -48,11 +40,6 @@ button:hover {
 @media (max-width: 600px) {
   .App {
     padding: 0;
-  }
-  header,
-  footer {
-    padding: 0.8rem 1rem;
-    border-radius: 0;
   }
   main {
     padding: 1.2rem 0.5rem;

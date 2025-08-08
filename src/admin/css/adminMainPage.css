@@ -1,9 +1,9 @@
-/* Admin Main Page - Modern Dark Theme */
-
 :root {
   --bg-0: #0b0f17;
   --bg-1: #0f1522;
   --bg-2: #111827;
+  --sidebar-w: 17rem; /* sidebar width */
+  --header-h: 5rem; /* header height */
   --surface-0: rgba(255, 255, 255, 0.04);
   --surface-1: rgba(255, 255, 255, 0.06);
   --border: rgba(255, 255, 255, 0.08);
@@ -21,80 +21,94 @@
 }
 
 .admin-layout {
-  display: flex;
   position: fixed;
   inset: 0; /* top:0; right:0; bottom:0; left:0; */
   width: 100vw;
   height: 100dvh; /* mobile viewport safe */
   margin: 0;
   padding: 0;
-  overflow: hidden; /* prevent body scroll; let inner scroll */
+  overflow: hidden; /* body scroll off; main handles scroll */
   background-color: var(--bg-1);
   color: var(--text-0);
 }
 
 .admin-layout__sidebar {
-  position: sticky;
+  position: fixed;
   top: 0;
-  align-self: flex-start;
-  width: 280px;
-  min-height: 100vh;
-  background-color: var(--bg-2);
+  left: 0;
+  width: var(--sidebar-w);
+  height: 100dvh;
+  background: rgba(17, 24, 40, 0.55);
+  backdrop-filter: blur(12px) saturate(140%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
   border-right: 1px solid var(--border);
-}
-
-.admin-layout__main {
-  flex: 1;
-  min-width: 0;
-  padding: 32px 40px;
-  overflow: auto; /* scroll inside main area */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
 }
 
 .admin-layout__header {
+  position: fixed;
+  top: 0;
+  left: var(--sidebar-w);
+  right: 0;
+  height: var(--header-h);
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
-  margin-bottom: 24px;
+  padding: 1rem 3rem;
+  background: rgba(17, 24, 40, 0.5);
+  backdrop-filter: blur(12px) saturate(140%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.18);
+  z-index: 20;
+}
+
+.admin-layout__main {
+  position: fixed;
+  top: var(--header-h);
+  left: var(--sidebar-w);
+  right: 0;
+  bottom: 0;
+  min-width: 0;
+  padding: 8rem 3rem;
+  overflow: auto; /* scroll inside main area */
 }
 
 .admin-layout__title {
   font-size: 28px;
   line-height: 1.25;
   font-weight: 700;
-  letter-spacing: 0.2px;
+  letter-spacing: 0.7rem;
   color: var(--text-0);
 }
 
 .admin-layout__title::after {
-  content: '';
-  display: block;
-  height: 2px;
-  width: 72px;
-  margin-top: 10px;
-  background-color: var(--border);
-  border-radius: 999px;
+  line-height: center;
 }
 
-.admin-layout__content {
-  position: relative;
-  background-color: var(--surface-0);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-2);
-  padding: 20px;
-  overflow: hidden;
-  animation: surfaceIn 280ms ease-out;
-}
-
-@keyframes surfaceIn {
+@keyframes fade-in-up {
   from {
     opacity: 0;
-    transform: translateY(6px) scale(0.98);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translateY(0);
   }
+}
+.admin-layout__content div,
+.admin-layout__content section {
+  animation: fade-in-up 0.3s ease forwards;
+}
+.admin-layout__content {
+  background-color: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-2);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 16px;
+  width: 90%;
 }
 
 /* Scrollbar styling */
@@ -130,9 +144,9 @@
 }
 
 @media (min-width: 768px) {
-  .admin-layout__main {
-    padding: 36px 48px;
-  }
+  /* .admin-layout__main {
+    padding: 0 3rem;
+  } */
   .card-grid > .card.sm-6 {
     grid-column: span 6;
   }
@@ -190,14 +204,11 @@
 
 /* Responsive: collapse sidebar on narrow screens */
 @media (max-width: 920px) {
-  .admin-layout__sidebar {
-    position: fixed;
-    inset: 0 auto 0 0;
-    width: 78px;
-    z-index: 30;
-    border-right-color: rgba(255, 255, 255, 0.06);
+  :root {
+    --sidebar-w: 78px;
+    --header-h: 56px;
   }
-  .admin-layout__main {
-    margin-left: 78px;
+  .admin-layout__sidebar {
+    width: var(--sidebar-w);
   }
 }
