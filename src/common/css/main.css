@@ -5,8 +5,9 @@ body {
   margin: 0;
   font-family: 'Segoe UI', 'Pretendard', 'Apple SD Gothic Neo', Arial, sans-serif;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
+  width: 100vw;
 }
 
 .fade-in-element {
