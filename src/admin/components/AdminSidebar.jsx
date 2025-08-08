@@ -1,9 +1,16 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router';
+import '../css/adminSidebar.css';
 
 const Sidebar = () => {
   const navigate = useNavigate();
   const manageList = [
+    {
+      title: '대시보드',
+      path: '.',
+      icon: '<FaIcons.FaCartPlus />',
+      cName: 'nav-text',
+    },
     {
       title: '유저 관리',
       path: 'manage/user',
@@ -80,35 +87,61 @@ const Sidebar = () => {
     },
   ];
 
-  const handleManagementClick = (e) => {
-    const path = e.target.dataset.path;
+  const [openMapByIndex, setOpenMapByIndex] = useState({});
 
-    navigate(path);
-  };
+  const handleParentItemClick = useCallback(
+    (itemIndex, item) => {
+      const hasChildren = Array.isArray(item.children) && item.children.length > 0;
+      if (hasChildren) {
+        setOpenMapByIndex((prev) => ({ ...prev, [itemIndex]: !prev[itemIndex] }));
+        return;
+      }
+      if (item?.path) {
+        navigate(item.path);
+      }
+    },
+    [navigate],
+  );
+
+  const handleChildItemClick = useCallback(
+    (child) => {
+      if (child?.path) {
+        navigate(child.path);
+      }
+    },
+    [navigate],
+  );
 
   return (
-    <div>
-      <ul>
+    <div className="admin-sidebar">
+      <ul className="admin-sidebar__menu">
         {manageList.map((manageSomething, i) => {
+          const isOpen = !!openMapByIndex[i];
           return (
             <li
               key={i}
-              className={manageSomething.cName}
-              data-path={manageSomething.path}
-              onClick={handleManagementClick}
+              className={`admin-sidebar__item ${manageSomething.cName || ''} ${isOpen ? 'is-open' : ''}`}
+              onClick={() => handleParentItemClick(i, manageSomething)}
+              role="button"
+              aria-expanded={isOpen}
             >
               {manageSomething.title}
-              {manageSomething.children ? (
-                <ul style={{ marginLeft: '2rem' }}>
-                  {manageSomething.children.map((children, i) => (
-                    <li key={i} className={children.cName} data-path={children.path} onClick={handleManagementClick}>
-                      {children.title}
+              {Array.isArray(manageSomething.children) && manageSomething.children.length > 0 && isOpen ? (
+                <ul className="admin-sidebar__submenu">
+                  {manageSomething.children.map((child, j) => (
+                    <li
+                      key={j}
+                      className={`admin-sidebar__subitem ${child.cName || ''}`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleChildItemClick(child);
+                      }}
+                    >
+                      {child.title}
                     </li>
                   ))}
                 </ul>
-              ) : (
-                <></>
-              )}
+              ) : null}
             </li>
           );
         })}

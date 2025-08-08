@@ -1,0 +1,124 @@
+/* Admin Sidebar - Clean Modern Dark */
+
+.admin-sidebar {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.admin-sidebar__menu {
+  list-style: none;
+  margin: 0;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  overflow: auto;
+}
+
+.admin-sidebar__item {
+  cursor: pointer;
+  user-select: none;
+  color: var(--text-1);
+  padding: 10px 12px;
+  border-radius: 10px;
+  transition: background-color 140ms ease, color 140ms ease, transform 120ms ease;
+}
+
+.admin-sidebar__item.has-children {
+  position: relative;
+  padding-right: 28px; /* caret 공간 */
+}
+
+.admin-sidebar__item.has-children::after {
+  content: '▾';
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%) rotate(-90deg);
+  color: var(--muted);
+  font-size: 12px;
+  transition: transform 180ms ease, color 140ms ease;
+}
+
+.admin-sidebar__item.has-children.is-open::after {
+  transform: translateY(-50%) rotate(0deg);
+  color: var(--text-1);
+}
+
+.admin-sidebar__item.is-open {
+  background-color: rgba(255, 255, 255, 0.06);
+  color: var(--text-0);
+}
+
+.admin-sidebar__item:hover {
+  background-color: rgba(255, 255, 255, 0.06);
+  color: var(--text-0);
+}
+
+.admin-sidebar__item:active {
+  transform: translateY(0.5px);
+}
+
+/* Submenu */
+.admin-sidebar__submenu {
+  list-style: none;
+  margin: 6px 0 0 0;
+  padding: 0 0 0 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  animation: submenuIn 160ms ease-out;
+  transform-origin: top;
+}
+
+.admin-sidebar__subitem {
+  cursor: pointer;
+  color: var(--muted);
+  padding: 8px 10px;
+  border-radius: 8px;
+  transition: background-color 140ms ease, color 140ms ease;
+}
+
+.admin-sidebar__subitem:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: var(--text-1);
+}
+
+/* Thin separators between logical groups (optional) */
+.admin-sidebar__divider {
+  height: 1px;
+  background-color: var(--border);
+  margin: 8px 0;
+  border-radius: 999px;
+}
+
+/* Scrollbar within sidebar */
+.admin-sidebar__menu::-webkit-scrollbar {
+  width: 8px;
+}
+.admin-sidebar__menu::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+}
+.admin-sidebar__menu::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Make clickable areas accessible */
+.admin-sidebar__item:focus,
+.admin-sidebar__subitem:focus {
+  outline: 2px solid rgba(124, 92, 255, 0.5);
+  outline-offset: 2px;
+}
+
+@keyframes submenuIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
