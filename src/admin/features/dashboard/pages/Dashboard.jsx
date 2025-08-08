@@ -125,7 +125,7 @@ const Dashboard = () => {
             {recentPrayerRequests.length > 0 ? (
               recentPrayerRequests.map((pray) => (
                 <li key={pray.id} style={{ fontSize: '1rem', margin: '1rem 0' }}>
-                  {pray.title} <br />
+                  {pray.title}
                   {pray.content}
                 </li>
               ))
