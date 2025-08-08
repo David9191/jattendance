@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
+import '../css/dashboard.css';
 import { supabase } from '../../../../common/supabase/supabaseClient';
 import AttendanceChart from '../components/AttendanceChart';
 import { UserDepartment } from '../../../../common/contexts/DepartmentContext';
@@ -7,10 +8,12 @@ const Dashboard = () => {
   const [newMembers, setNewMembers] = useState([]);
   const [longAbsentees, setLongAbsentees] = useState([]);
   const [birthdaysThisMonth, setBirthdaysThisMonth] = useState([]);
+  // removed skeleton loading UI; keep data rendered directly
   const { currentDepartmentInfo } = UserDepartment();
   const [recentPrayerRequests, setRecentPrayerRequests] = useState([]);
 
-  const getRecentPrayerRequests = async () => {
+  const getRecentPrayerRequests = useCallback(async () => {
+    if (!currentDepartmentInfo?.id) return;
     const { data, error } = await supabase
       .from('prayer_requests')
       .select('*, users(name)')
@@ -22,9 +25,10 @@ const Dashboard = () => {
       return;
     }
     setRecentPrayerRequests(data);
-  };
+  }, [currentDepartmentInfo?.id]);
 
-  const getNewMembers = async () => {
+  const getNewMembers = useCallback(async () => {
+    if (!currentDepartmentInfo?.id) return;
     const twoMonthsAgo = new Date();
     twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2);
 
@@ -41,9 +45,10 @@ const Dashboard = () => {
       return;
     }
     setNewMembers(data);
-  };
+  }, [currentDepartmentInfo?.id]);
 
-  const getLongAbsentees = async () => {
+  const getLongAbsentees = useCallback(async () => {
+    if (!currentDepartmentInfo?.id) return;
     const twoMonthsAgo = new Date();
     twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2);
 
@@ -76,9 +81,10 @@ const Dashboard = () => {
     const absentees = allUsers.map((u) => u.users).filter((user) => !recentAttendeeIds.has(user.id));
 
     setLongAbsentees(absentees);
-  };
+  }, [currentDepartmentInfo?.id]);
 
-  const getBirthdaysThisMonth = async () => {
+  const getBirthdaysThisMonth = useCallback(async () => {
+    if (!currentDepartmentInfo?.id) return;
     const { data: usersInDept, error } = await supabase
       .from('user_departments')
       .select('users(name, birth_date)')
@@ -99,89 +105,64 @@ const Dashboard = () => {
       });
 
     setBirthdaysThisMonth(birthdayMembers);
-  };
+  }, [currentDepartmentInfo?.id]);
 
   useEffect(() => {
-    getRecentPrayerRequests();
-    getNewMembers();
-    getBirthdaysThisMonth();
-    getLongAbsentees();
-  }, []); // currentDepartmentInfo를 의존성 배열에 추가
+    (async () => {
+      await Promise.all([getRecentPrayerRequests(), getNewMembers(), getBirthdaysThisMonth(), getLongAbsentees()]);
+    })();
+  }, [getRecentPrayerRequests, getNewMembers, getBirthdaysThisMonth, getLongAbsentees]);
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-      }}
-    >
-      <div
-        className="dashboard-container"
-        style={{ display: 'flex', justifyContent: 'space-around', marginBottom: '5rem' }}
-      >
-        <div className="pray-requests-container">
+    <div className="dashboard">
+      <div className="dashboard-container">
+        <div className="dashboard-card col-12 col-6 pray-requests-container">
           <h1>기도 요청</h1>
-          <ul>
+          <ul className="dashboard-list">
             {recentPrayerRequests.length > 0 ? (
               recentPrayerRequests.map((pray) => (
-                <li key={pray.id} style={{ fontSize: '1rem', margin: '1rem 0' }}>
+                <li key={pray.id}>
                   {pray.title}
                   {pray.content}
                 </li>
               ))
             ) : (
-              <p>없음</p>
+              <p className="dashboard-empty">없음</p>
             )}
           </ul>
         </div>
-        <div className="attendance-rate-container">
-          <h1>출석률</h1>
+        <div className="dashboard-card col-12 col-6 attendance-rate-container">
           <AttendanceChart />
         </div>
       </div>
-      <div
-        className="dashboard-container"
-        style={{ display: 'flex', justifyContent: 'space-around', marginBottom: '5rem' }}
-      >
-        <div className="long-absentees-container">
+      <div className="dashboard-container">
+        <div className="dashboard-card col-12 col-4 long-absentees-container">
           <h1>장결자</h1>
-          <ul>
+          <ul className="dashboard-list">
             {longAbsentees.length > 0 ? (
-              longAbsentees.map((user, i) => (
-                <li key={i} style={{ fontSize: '1rem', margin: '1rem 0' }}>
-                  {user.name}
-                </li>
-              ))
+              longAbsentees.map((user, i) => <li key={i}>{user.name}</li>)
             ) : (
-              <p>없음</p>
+              <p className="dashboard-empty">없음</p>
             )}
           </ul>
         </div>
-        <div className="new-members-container">
+        <div className="dashboard-card col-12 col-4 new-members-container">
           <h1>새신자</h1>
-          <ul>
+          <ul className="dashboard-list">
             {newMembers.length > 0 ? (
-              newMembers.map((newMember, i) => (
-                <li key={i} style={{ fontSize: '1rem', margin: '1rem 0' }}>
-                  {newMember.users.name}
-                </li>
-              ))
+              newMembers.map((newMember, i) => <li key={i}>{newMember.users.name}</li>)
             ) : (
-              <p>없음</p>
+              <p className="dashboard-empty">없음</p>
             )}
           </ul>
         </div>
-        <div className="birthday-this-month-container">
+        <div className="dashboard-card col-12 col-4 birthday-this-month-container">
           <h1>이번 달 생일자🥳🎂🎉</h1>
-          <ul>
+          <ul className="dashboard-list">
             {birthdaysThisMonth.length > 0 ? (
-              birthdaysThisMonth.map((member, i) => (
-                <li key={i} style={{ fontSize: '1rem', margin: '1rem 0' }}>
-                  {member.name}
-                </li>
-              ))
+              birthdaysThisMonth.map((member, i) => <li key={i}>{member.name}</li>)
             ) : (
-              <p>없음</p>
+              <p className="dashboard-empty">없음</p>
             )}
           </ul>
         </div>

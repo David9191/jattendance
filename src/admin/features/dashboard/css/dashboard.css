@@ -1,0 +1,69 @@
+/* Dashboard - Clean Modern Dark */
+
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.dashboard-container {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.dashboard-card {
+  background-color: var(--surface-0);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.dashboard-card h1,
+.dashboard-card h2,
+.dashboard-card h3 {
+  margin: 0 0 12px 0;
+  font-size: 18px;
+  color: var(--text-0);
+}
+
+.dashboard-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.dashboard-list li {
+  padding: 10px 8px;
+  color: var(--text-1);
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
+}
+
+.dashboard-list li:last-child {
+  border-bottom: none;
+}
+
+.dashboard-empty {
+  color: var(--muted);
+  padding: 4px 0;
+}
+
+/* Simple grid spans */
+.col-12 {
+  grid-column: span 12;
+}
+
+@media (min-width: 768px) {
+  .col-6 {
+    grid-column: span 6;
+  }
+  .col-4 {
+    grid-column: span 4;
+  }
+}
+
+/* Chart card tweak */
+.attendance-rate-container {
+  display: flex;
+  flex-direction: column;
+}
