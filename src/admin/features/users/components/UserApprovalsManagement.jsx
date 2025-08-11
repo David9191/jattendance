@@ -1,11 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { getPendingApprovalUsers } from '../services/getUserList';
 import { UserDepartment } from '../../../../common/contexts/DepartmentContext';
+import { userApprovalsStatusUpdate } from '../services/updateApprovalsStatus';
 import '../css/userApprovalsManagement.css';
 
 const UserApprovalsManagement = () => {
   const [pendingApprovalUsers, setPendingApprovalUsers] = useState([]);
   const { currentDepartmentInfo } = UserDepartment();
+
+  const handleApprovalsStatusClick = async (e) => {
+    const userId = e.target.id;
+    const eventContent = e.target.innerText;
+    const isConfirmed = confirm(`${eventContent} 하시겠습니까?`);
+
+    if (isConfirmed) {
+      const updateResult = await userApprovalsStatusUpdate(userId, eventContent === '승인');
+
+      alert(updateResult.error ? '에러가 발생했습니다.\n다시 한 번 시도해 주세요.' : `${eventContent}되었습니다.`);
+    }
+  };
 
   useEffect(() => {
     const load = async () => {
@@ -53,8 +66,12 @@ const UserApprovalsManagement = () => {
                 {item.requested_at ? new Date(item.requested_at).toLocaleDateString() : '-'}
               </div>
               <div className="user-actions">
-                <button className="btn-ghost">승인</button>
-                <button className="btn-ghost">거절</button>
+                <button id={u.id} className="btn-ghost" name="approved" onClick={handleApprovalsStatusClick}>
+                  승인
+                </button>
+                <button id={u.id} className="btn-ghost" name="rejected" onClick={handleApprovalsStatusClick}>
+                  거절
+                </button>
               </div>
             </div>
           );
