@@ -75,7 +75,8 @@ export const getPendingApprovalUsers = async (departmentId) => {
       `,
       )
       .eq('department_id', departmentId)
-      .eq('status', 'pending');
+      .eq('status', 'pending')
+      .order('created_at', { ascending: false });
     if (error) {
       console.error('승인 대기 유저 조회 중 에러 발생:', error);
       return [];
