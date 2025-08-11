@@ -9,7 +9,7 @@ export const AuthContextProvider = ({ children }) => {
   const { setCurrentUserProfile } = UserProfile();
 
   // 회원가입
-  const signUpNewUser = async (userProfile) => {
+  const signUp = async (userProfile) => {
     const { email: _, password: __, ...newUserProfileWithoutId } = userProfile;
 
     // 회원가입
@@ -124,7 +124,7 @@ export const AuthContextProvider = ({ children }) => {
   const value = {
     session,
     setSession,
-    signUpNewUser,
+    signUp,
     signIn,
     getUserProfile,
     signOut,

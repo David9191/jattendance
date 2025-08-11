@@ -24,7 +24,7 @@ const SignUp = () => {
   const [departments, setDepartments] = useState([]);
   const [error, setError] = useState('');
 
-  const { signUpNewUser, signOut } = UserAuth();
+  const { signUp, signOut } = UserAuth();
   const { geAllDepartments } = UserProfile();
   const navigate = useNavigate();
 
@@ -38,7 +38,7 @@ const SignUp = () => {
   const handleSignUp = async (e) => {
     e.preventDefault();
     try {
-      const { success } = await signUpNewUser(userProfile);
+      const { success } = await signUp(userProfile);
       if (!success) {
         alert('에러가 발생했습니다. 다시 시도해 주세요.', error);
         return;
