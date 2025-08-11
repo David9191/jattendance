@@ -12,13 +12,15 @@ export const userApprovalsStatusUpdate = async (userId, departmentId, isApprove)
 
     const [
       { data: department_memberships, error: catError },
-      { data: tags, error: tagError },
-      { data: settings, error: settingError },
+      { data: user_departments, error: tagError },
+      { data: user_roles, error: settingError },
     ] = await Promise.all([
       supabase
         .from('department_memberships')
         .update({ status: isApprove ? 'approved' : 'rejected' })
-        .eq('user_id', userId),
+        .eq('user_id', userId)
+        .select()
+        .single(),
 
       supabase
         .from('user_departments')
@@ -45,7 +47,7 @@ export const userApprovalsStatusUpdate = async (userId, departmentId, isApprove)
       console.error('there was a problem update user approvals status: ');
     }
 
-    return { department_memberships, tags, settings };
+    return { department_memberships, user_departments, user_roles };
   } catch (error) {
     console.error('Insert failed:', error);
     throw error;

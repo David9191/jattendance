@@ -44,21 +44,21 @@ const UserApprovalsManagement = () => {
           <div>액션</div>
         </div>
         {pendingApprovalUsers?.map((item) => {
-          const u = item.users || {};
-          const initials = (u.name || '?').slice(0, 2);
+          const user = item.users || {};
+          const initials = (user.name || '?').slice(0, 2);
           return (
             <div key={item.id} className="approvals-list__row">
               <div>
                 <div className="user-avatar" aria-hidden>
-                  {u.profile_image_url ? <img src={u.profile_image_url} alt={u.name} /> : initials}
+                  {user.profile_image_url ? <img src={user.profile_image_url} alt={user.name} /> : initials}
                 </div>
               </div>
-              <div className="user-name">{u.name || '-'}</div>
+              <div className="user-name">{user.name || '-'}</div>
               <div className="user-gender hide-sm">
-                {u.gender === 'male' ? '남자' : u.gender === 'female' ? '여자' : '-'}
+                {user.gender === 'male' ? '남자' : user.gender === 'female' ? '여자' : '-'}
               </div>
-              <div className="user-phone hide-sm">{u.phone || '-'}</div>
-              <div className="user-birth hide-sm">{u.birth_date || '-'}</div>
+              <div className="user-phone hide-sm">{user.phone || '-'}</div>
+              <div className="user-birth hide-sm">{user.birth_date || '-'}</div>
               <div className="hide-sm">
                 <span className="badge badge--pending">대기</span>
               </div>
@@ -66,10 +66,10 @@ const UserApprovalsManagement = () => {
                 {item.requested_at ? new Date(item.requested_at).toLocaleDateString() : '-'}
               </div>
               <div className="user-actions">
-                <button id={u.id} className="btn-ghost" name="approved" onClick={handleApprovalsStatusClick}>
+                <button id={user.id} className="btn-ghost" name="approved" onClick={handleApprovalsStatusClick}>
                   승인
                 </button>
-                <button id={u.id} className="btn-ghost" name="rejected" onClick={handleApprovalsStatusClick}>
+                <button id={user.id} className="btn-ghost" name="rejected" onClick={handleApprovalsStatusClick}>
                   거절
                 </button>
               </div>
