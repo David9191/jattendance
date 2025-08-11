@@ -63,3 +63,29 @@ export const getMonthlyBirthdayMembers = async (departmentId) => {
     return []; // 객체가 아닌 빈 배열을 반환합니다.
   }
 };
+
+export const getPendingApprovalUsers = async (departmentId) => {
+  try {
+    const { data, error } = await supabase
+      .from('department_memberships')
+      .select(
+        `
+        *,
+        users!department_memberships_user_id_fkey(*)
+      `,
+      )
+      .eq('department_id', departmentId)
+      .eq('status', 'pending');
+    if (error) {
+      console.error('승인 대기 유저 조회 중 에러 발생:', error);
+      return [];
+    }
+
+    // console.log(data);
+
+    return data || [];
+  } catch (error) {
+    console.error('Error fetching pending approval users:', error);
+    return [];
+  }
+};
