@@ -7,7 +7,7 @@ import PrivateRoute from './common/components/PrivateRoute';
 import SelectDepartment from './common/pages/SelectDepartment';
 import AdminMainPage from './admin/pages/AdminMainPage';
 import AdminDashboard from './admin/features/dashboard/pages/Dashboard'; // 이름 변경
-import UserManagement from './admin/features/users/pages/UserManagement';
+import UserManagement from './admin/features/users/components/UserManagement';
 import DepartmentManagement from './admin/features/departments/pages/DepartmentManagement';
 import RoleManagement from './admin/features/roles/pages/RoleManagement';
 import WorshipManagement from './admin/features/worships/pages/WorshipManagement';
@@ -18,11 +18,21 @@ import AnnouncementManagement from './admin/features/announcements/pages/Announc
 import SnsManagement from './admin/features/sns/pages/SnsManagement';
 import PermissionManagement from './admin/features/permissions/pages/PermissionManagement';
 import SecurityLogManagement from './admin/features/security-logs/pages/SecurityLogManagement';
+import Test from './tests/Test';
+import UserApprovalsManagement from './admin/features/users/components/UserApprovalsManagement';
 
 const manageList = [
   {
     path: 'manage/user',
     element: <UserManagement />,
+  },
+  {
+    path: 'manage/user/attendance',
+    element: <UserManagement />,
+  },
+  {
+    path: 'manage/user/approvals',
+    element: <UserApprovalsManagement />,
   },
   {
     path: 'manage/department',
@@ -89,5 +99,9 @@ export const router = createBrowserRouter([
     path: '/admin/:departmentSlug',
     element: <AdminMainPage />,
     children: [{ index: true, element: <AdminDashboard /> }, ...manageList],
+  },
+  {
+    path: '/test',
+    element: <Test />,
   },
 ]);

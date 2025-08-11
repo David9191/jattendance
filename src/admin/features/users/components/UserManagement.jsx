@@ -1,6 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { UserDepartment } from '../../../../common/contexts/DepartmentContext';
-import { getAverageAttendanceRate, getUserList, getMonthlyBirthdayMembers } from '../services/getUserList';
+import {
+  getAverageAttendanceRate,
+  getUserList,
+  getMonthlyBirthdayMembers,
+  getPendingApprovalUsers,
+} from '../services/getUserList';
 
 const UserManagement = () => {
   const [pageNationInfo, setPageNationInfo] = useState({
@@ -64,9 +69,22 @@ const UserManagement = () => {
     setInitData();
   }, [currentDepartmentInfo.id, pageNationInfo, pageNationInfo.pageSize]);
 
+  const filteredUsers = useMemo(() => {
+    if (!searchForUserName) return userList.users || [];
+    const q = searchForUserName.trim().toLowerCase();
+    return (userList.users || []).filter((u) => (u?.name || '').toLowerCase().includes(q));
+  }, [searchForUserName, userList.users]);
+
   return (
     <div>
-      <h1>USER MANAGEMENT</h1>
+      <h1
+        onClick={async () => {
+          const data = await getPendingApprovalUsers(currentDepartmentInfo.id);
+          console.log(data);
+        }}
+      >
+        USER MANAGEMENT
+      </h1>
       <section
         className="department-stats-container"
         style={{ display: 'flex', justifyContent: 'space-around', marginTop: '3rem' }}
@@ -113,21 +131,41 @@ const UserManagement = () => {
         </div>
       </section>
 
-      <section className="user-list-container">
-        <ul>
-          {userList?.users?.map((user, i) => (
-            // 사진, 이름, 성별, 역할, 속한 그룹, 핸드폰 번호, 출석률
-            <li key={i} className="each-user" style={{ display: 'flex', flexDirection: 'row' }}>
-              <img src="" alt="" />
-              <p>{user?.name}name</p>
-              <p>{user?.gender}gender</p>
-              <p>{user?.role}role</p>
-              <p>{user?.phone}phone</p>
-              <p>출석률</p>
-              <p>상세보기</p>
-            </li>
-          ))}
-        </ul>
+      <section className="user-list-container" style={{ marginTop: '24px' }}>
+        <div className="um-list">
+          <div className="um-list__header">
+            <div>사진</div>
+            <div>이름</div>
+            <div>성별</div>
+            <div className="hide-sm">역할</div>
+            <div className="hide-sm">그룹</div>
+            <div className="hide-sm">전화번호</div>
+            <div>액션</div>
+          </div>
+          {filteredUsers.map((u, i) => {
+            const initials = (u.name || '?').slice(0, 2);
+            return (
+              <div key={u.id || i} className="um-list__row">
+                <div>
+                  <div className="um-avatar" aria-hidden>
+                    {u.profile_image_url ? <img src={u.profile_image_url} alt={u.name} /> : initials}
+                  </div>
+                </div>
+                <div className="um-name">{u.name || '-'}</div>
+                <div className="um-gender">{u.gender || '-'}</div>
+                <div className="um-role hide-sm">{u.role || '-'}</div>
+                <div className="um-group hide-sm">{u.group || '-'}</div>
+                <div className="um-phone hide-sm">{u.phone || '-'}</div>
+                <div className="um-actions">
+                  <button className="btn-ghost">상세</button>
+                </div>
+              </div>
+            );
+          })}
+          {filteredUsers.length === 0 && (
+            <div style={{ padding: '14px', color: 'var(--muted)' }}>표시할 유저가 없습니다.</div>
+          )}
+        </div>
       </section>
 
       <section
