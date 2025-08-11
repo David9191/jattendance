@@ -14,9 +14,9 @@ const UserApprovalsManagement = () => {
     const isConfirmed = confirm(`${eventContent} 하시겠습니까?`);
 
     if (isConfirmed) {
-      const updateResult = await userApprovalsStatusUpdate(userId, eventContent === '승인');
+      const updateResult = await userApprovalsStatusUpdate(userId, currentDepartmentInfo?.id, eventContent === '승인');
 
-      alert(updateResult.error ? '에러가 발생했습니다.\n다시 한 번 시도해 주세요.' : `${eventContent}되었습니다.`);
+      alert(updateResult?.error ? '에러가 발생했습니다.\n다시 한 번 시도해 주세요.' : `${eventContent}되었습니다.`);
     }
   };
 

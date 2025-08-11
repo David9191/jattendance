@@ -1,20 +1,53 @@
 import { supabase } from '../../../../common/supabase/supabaseClient';
 
-export const userApprovalsStatusUpdate = async (userId, isApprove) => {
+export const userApprovalsStatusUpdate = async (userId, departmentId, isApprove) => {
   try {
-    const { error } = await supabase
-      .from('department_memberships')
-      .update({ status: isApprove ? 'approved' : 'rejected' })
-      .eq('user_id', userId);
+    const { data: userAuth } = await supabase.auth.getUser();
+    const { data: memberRoleId } = await supabase
+      .from('roles')
+      .select('id')
+      .eq('department_id', departmentId)
+      .eq('role', 'member')
+      .single();
 
-    if (error) {
-      console.error('there was a problem update user approvals status: ', error);
-      return { success: false, error: error.message };
+    const [
+      { data: department_memberships, error: catError },
+      { data: tags, error: tagError },
+      { data: settings, error: settingError },
+    ] = await Promise.all([
+      supabase
+        .from('department_memberships')
+        .update({ status: isApprove ? 'approved' : 'rejected' })
+        .eq('user_id', userId),
+
+      supabase
+        .from('user_departments')
+        .insert({
+          user_id: userId,
+          department_id: departmentId,
+          assigned_id: userAuth.user.id,
+        })
+        .select()
+        .single(),
+
+      supabase
+        .from('user_roles')
+        .insert({
+          user_id: userId,
+          role_id: memberRoleId.id,
+          department_id: departmentId,
+        })
+        .select()
+        .single(),
+    ]);
+
+    if (catError || tagError || settingError) {
+      console.error('there was a problem update user approvals status: ');
     }
-    return { success: true };
-  } catch (error) {
-    console.error('an error occurred: ', error);
-  }
 
-  return isApprove;
+    return { department_memberships, tags, settings };
+  } catch (error) {
+    console.error('Insert failed:', error);
+    throw error;
+  }
 };
