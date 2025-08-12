@@ -47,26 +47,6 @@ const SelectDepartment = () => {
     activateDepartmentFromDataset(e.currentTarget.dataset);
   };
 
-  useEffect(() => {
-    const adminFlag = currentUserProfile?.user_roles?.some((r) => r?.role?.role === 'admin');
-    const superAdminFlag = currentUserProfile?.user_roles?.some((r) => r?.role?.role === 'super_admin');
-    setIsAdmin({ isAdmin: adminFlag, isSuperAdmin: superAdminFlag });
-
-    const fetchDepartments = async () => {
-      let departmentInfo;
-
-      if (superAdminFlag) {
-        const { data: allDepartment } = await geAllDepartments();
-        departmentInfo = allDepartment;
-      } else {
-        const { data: departments } = await getDepartmentsByRole();
-        departmentInfo = departments;
-      }
-      setCurrentUserDepartments(departmentInfo || []);
-    };
-    fetchDepartments();
-  }, [currentUserProfile?.user_roles, geAllDepartments, getDepartmentsByRole]);
-
   const normalizeDepartmentItem = (item) => {
     const hasNestedDept = !!item?.departments;
     const dept = hasNestedDept ? item.departments : item;
@@ -87,6 +67,26 @@ const SelectDepartment = () => {
       role_name: derivedRoleName,
     };
   };
+
+  useEffect(() => {
+    const adminFlag = currentUserProfile?.user_roles?.some((r) => r?.role?.role === 'admin');
+    const superAdminFlag = currentUserProfile?.user_roles?.some((r) => r?.role?.role === 'super_admin');
+    setIsAdmin({ isAdmin: adminFlag, isSuperAdmin: superAdminFlag });
+
+    const fetchDepartments = async () => {
+      let departmentInfo;
+
+      if (superAdminFlag) {
+        const { data: allDepartment } = await geAllDepartments();
+        departmentInfo = allDepartment;
+      } else {
+        const { data: departments } = await getDepartmentsByRole();
+        departmentInfo = departments;
+      }
+      setCurrentUserDepartments(departmentInfo || []);
+    };
+    fetchDepartments();
+  }, [currentUserProfile?.user_roles, geAllDepartments, getDepartmentsByRole]);
 
   return (
     <div className="sd-container">
