@@ -9,7 +9,7 @@
   --sd-border: rgba(255, 255, 255, 0.08);
   --sd-primary: #8ab4f8; /* matches link/button accent */
   --sd-primary-strong: #5c8ee6;
-  --sd-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
+  --sd-shadow: 0 0.25rem 1.5rem rgba(0, 0, 0, 0.25);
 }
 
 @media (prefers-color-scheme: light) {
@@ -22,7 +22,7 @@
     --sd-border: rgba(0, 0, 0, 0.08);
     --sd-primary: #2563eb;
     --sd-primary-strong: #1d4ed8;
-    --sd-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    --sd-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.08);
   }
 }
 
@@ -32,23 +32,23 @@
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  padding: 32px 20px 56px;
+  padding: 2rem 1.25rem 3.5rem;
   background: var(--sd-bg);
 }
 
 .sd-inner {
   width: 100%;
-  max-width: 1200px;
+  max-width: 75rem;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 1.25rem;
 }
 
 .sd-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 0.75rem;
 }
 
 .sd-title {
@@ -68,13 +68,13 @@
   border-radius: 8px;
   cursor: pointer;
   transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.1s;
-  box-shadow: 0 2px 8px rgba(138, 180, 248, 0.08);
+  box-shadow: 0 0.125rem 0.5rem rgba(138, 180, 248, 0.08);
 }
 
 .sd-logout:hover {
   background: var(--sd-primary-strong);
   color: #fff;
-  transform: translateY(-1px);
+  transform: translateY(-0.0625rem);
 }
 
 .sd-logout:active {
@@ -84,22 +84,22 @@
 .sd-grid {
   display: grid;
   grid-template-columns: repeat(1, minmax(0, 1fr));
-  gap: 16px;
+  gap: 1rem;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 40rem) {
   .sd-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-@media (min-width: 960px) {
+@media (min-width: 60rem) {
   .sd-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
-@media (min-width: 1280px) {
+@media (min-width: 80rem) {
   .sd-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
@@ -108,23 +108,24 @@
 .sd-card {
   user-select: none;
   -webkit-tap-highlight-color: transparent;
-  border: 1px solid var(--sd-border);
+  border: 0.0625rem solid var(--sd-border);
   background: var(--sd-surface);
   color: var(--sd-text);
-  padding: 18px 16px;
-  border-radius: 16px;
+  padding: 1.125rem 1rem;
+  border-radius: 1rem;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 0.75rem;
   box-shadow: var(--sd-shadow);
   transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
 }
 
 .sd-card:hover {
-  transform: translateY(-3px);
+  transform: translateY(-0.1875rem);
   border-color: rgba(138, 180, 248, 0.35);
+  background: var(--sd-surface);
 }
 
 .sd-card:active {
@@ -132,15 +133,45 @@
 }
 
 .sd-card__name {
-  font-size: 16px;
+  font-size: 1.125rem; /* 18px */
   font-weight: 700;
   color: var(--sd-text);
+}
+
+/* Layout helpers for card content (no size increase) */
+.sd-card__left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.sd-card__badge {
+  width: 0.625rem;
+  height: 2.25rem;
+  border-radius: 0.5rem;
+  background: var(--sd-primary);
+  opacity: 0.9;
+}
+
+.sd-card__content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.sd-card__role {
+  font-size: 0.875rem; /* 14px */
+  color: var(--sd-text-muted);
+}
+
+.sd-card__role--muted {
+  opacity: 0.8;
 }
 
 .sd-empty {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 40px 16px;
+  padding: 2.5rem 1rem;
   color: var(--sd-text-muted);
 }
