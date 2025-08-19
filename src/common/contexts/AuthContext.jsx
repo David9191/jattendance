@@ -10,12 +10,12 @@ export const AuthContextProvider = ({ children }) => {
 
   // 회원가입
   const signUp = async (userProfile) => {
-    const { email: _, password: __, ...newUserProfileWithoutId } = userProfile;
+    const { email, password, ...newUserProfileWithoutId } = userProfile;
 
     // 회원가입
     const { data: signUpUser, error: signUpError } = await supabase.auth.signUp({
-      email: userProfile.email,
-      password: userProfile.password,
+      email,
+      password,
     });
     if (signUpError) {
       console.error('there was a problem signing up: ', signUpError);
@@ -25,6 +25,7 @@ export const AuthContextProvider = ({ children }) => {
     const userId = signUpUser.user.id;
     const newUser = {
       ...newUserProfileWithoutId,
+      email,
       id: userId,
     };
     // 유저 생성 in public 스키마
