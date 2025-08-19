@@ -5,11 +5,26 @@ export const getUserList = async (departmentId, page, pageSize) => {
   const to = page * pageSize - 1;
 
   try {
-    const { data, error, count } = await supabase.rpc('get_user_lists', {
-      p_department_id: departmentId,
-      p_from: from,
-      p_to: to,
-    });
+    const { data, error, count } = await supabase
+      .from('user_departments')
+      .select(
+        `
+        *,
+        users!user_departments_user_id_fkey(
+          *,
+          user_roles(*,
+            roles(role_name)
+          ),
+          user_groups!user_groups_user_id_fkey(*)
+        )
+      `,
+        { count: 'exact' },
+      )
+      .eq('department_id', departmentId)
+      .order('created_at', { ascending: false })
+      .range(from, to);
+
+    console.log(data);
 
     if (error) {
       console.error('Error fetching user list:', error);
@@ -81,8 +96,6 @@ export const getPendingApprovalUsers = async (departmentId) => {
       console.error('승인 대기 유저 조회 중 에러 발생:', error);
       return [];
     }
-
-    // console.log(data);
 
     return data || [];
   } catch (error) {
