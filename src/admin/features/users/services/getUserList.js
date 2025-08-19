@@ -1,11 +1,11 @@
 import { supabase } from '../../../../common/supabase/supabaseClient';
 
-export const getUserList = async (departmentId, page, pageSize) => {
+export const getUserList = async (departmentId, page, pageSize, userName) => {
   const from = (page - 1) * pageSize;
   const to = page * pageSize - 1;
 
   try {
-    const { data, error, count } = await supabase
+    const { data, error } = await supabase
       .from('user_departments')
       .select(
         `
@@ -18,24 +18,22 @@ export const getUserList = async (departmentId, page, pageSize) => {
           user_groups!user_groups_user_id_fkey(*)
         )
       `,
-        { count: 'exact' },
       )
       .eq('department_id', departmentId)
+      .ilike('users.name', `%${userName || ''}%`) // 이름 검색
       .order('created_at', { ascending: false })
       .range(from, to);
 
-    console.log(data);
-
     if (error) {
       console.error('Error fetching user list:', error);
-      return { users: [], count: 0 };
+      return []; // 빈 배열 반환
     }
 
-    const users = data.map((item) => item.users);
-    return { users, count };
+    const users = data.map((item) => item.users).filter((item) => item !== null);
+    return users || [];
   } catch (error) {
     console.error('유저 리스트 조회 중 에러 발생:', error);
-    return { users: [], count: 0 };
+    return []; // 빈 배열 반환
   }
 };
 
@@ -71,7 +69,6 @@ export const getMonthlyBirthdayMembers = async (departmentId) => {
       return []; // 객체가 아닌 빈 배열을 반환합니다.
     }
 
-    // data 자체가 사용자 배열이므로, data를 그대로 반환합니다.
     return data || [];
   } catch (error) {
     console.error('Error fetching monthly birthday members:', error);

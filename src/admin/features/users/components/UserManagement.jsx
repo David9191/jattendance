@@ -1,11 +1,7 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { UserDepartment } from '../../../../common/contexts/DepartmentContext';
-import {
-  getAverageAttendanceRate,
-  getUserList,
-  getMonthlyBirthdayMembers,
-  getPendingApprovalUsers,
-} from '../services/getUserList';
+import { getAverageAttendanceRate, getUserList, getMonthlyBirthdayMembers } from '../services/getUserList';
+import '../css/userManagement.css';
 
 const UserManagement = () => {
   const [pageNationInfo, setPageNationInfo] = useState({
@@ -14,8 +10,7 @@ const UserManagement = () => {
     totalPage: 0,
     pageNationBlockSize: 10,
   });
-  const [searchForUserName, setSearchForUserName] = useState('');
-  const [userList, setUserList] = useState({ users: [], count: 0 });
+  const [userList, setUserList] = useState([]);
   const [departmentStats, setDepartmentStats] = useState({
     attendance: {
       total_members: 0,
@@ -24,19 +19,42 @@ const UserManagement = () => {
     },
     birthdayMembers: [],
   });
+  const [searchName, setSearchName] = useState('');
   const { currentDepartmentInfo } = UserDepartment();
 
-  const handleUserNameChange = (e) => {
-    const userName = e.target.value;
-    setSearchForUserName(userName);
+  const handleChangeSearchName = (e) => {
+    setSearchName(e.target.value);
   };
 
-  const handleUserSearch = (e) => {
-    if (e._reactName == 'onClick' || (e._reactName == 'onKeyDown' && e.key == 'Enter')) console.log(e);
+  const handleUserSearch = async () => {
+    if (!searchName) {
+      alert('이름을 입력해주세요.');
+      return;
+    }
+
+    const searchedUsers = await getUserList(
+      currentDepartmentInfo.id,
+      pageNationInfo.currentPage,
+      pageNationInfo.pageSize,
+      searchName,
+    );
+    if (searchedUsers.length === 0) {
+      alert('해당 이름의 사용자가 없습니다.');
+      return;
+    }
+    setUserList(searchedUsers);
   };
 
+  // 다시 검색
   const handlePageChange = () => {
     setPageNationInfo({ ...pageNationInfo, currentPage: pageNationInfo.currentPage - 1 });
+  };
+
+  // 사용자 상세 보기
+  const handleUserDetail = (user) => {
+    console.log('사용자 상세 정보:', user);
+    // TODO: 상세 모달 또는 페이지로 이동
+    alert(`${user.name}님의 상세 정보를 보여줍니다.`);
   };
 
   useEffect(() => {
@@ -52,14 +70,13 @@ const UserManagement = () => {
         const { total_members, average_attendees, attendance_rate } = attendanceData;
 
         setUserList(userList);
-        setDepartmentStats((prevStats) => ({
-          ...prevStats,
+        setDepartmentStats({
           attendance: { total_members, average_attendees, attendance_rate },
           birthdayMembers: monthlyBirthdayMembers,
-        }));
+        });
         setPageNationInfo({
           ...pageNationInfo,
-          totalPage: Math.ceil(userList.count / pageNationInfo.pageSize),
+          totalPage: Math.ceil(userList.length / pageNationInfo.pageSize),
         });
       } catch (error) {
         console.error(error);
@@ -67,28 +84,11 @@ const UserManagement = () => {
     };
 
     setInitData();
-  }, [currentDepartmentInfo.id, pageNationInfo, pageNationInfo.pageSize]);
-
-  const filteredUsers = useMemo(() => {
-    if (!searchForUserName) return userList.users || [];
-    const q = searchForUserName.trim().toLowerCase();
-    return (userList.users || []).filter((u) => (u?.name || '').toLowerCase().includes(q));
-  }, [searchForUserName, userList.users]);
+  }, []);
 
   return (
-    <div>
-      <h1
-        onClick={async () => {
-          const data = await getPendingApprovalUsers(currentDepartmentInfo.id);
-          console.log(data);
-        }}
-      >
-        USER MANAGEMENT
-      </h1>
-      <section
-        className="department-stats-container"
-        style={{ display: 'flex', justifyContent: 'space-around', marginTop: '3rem' }}
-      >
+    <div className="um-page">
+      <section className="department-stats-container">
         <div>
           <div className="average-attendance-rate department-stats">
             <h3>한 달 평균 출석률</h3>
@@ -111,27 +111,18 @@ const UserManagement = () => {
             <input
               id="user-name"
               type="text"
-              value={searchForUserName}
+              value={searchName}
+              onChange={handleChangeSearchName}
               placeholder="이름"
-              onChange={handleUserNameChange}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  handleUserSearch(e); // 엔터를 누르면 검색 함수 실행
-                }
-              }}
+              onKeyDown={(e) => e.key === 'Enter' && handleUserSearch()}
             />
             <button onClick={handleUserSearch}>검색</button>
-            {/* 
-              사용자가 엔터를 누르는 동작은 input의 onKeyDown 이벤트에서 e.key === 'Enter'로 감지할 수 있습니다.
-              검색 버튼 클릭은 onClick 이벤트로 감지할 수 있습니다.
-              handleUserSearch 함수는 검색을 실행하는 함수로 직접 구현해야 합니다.
-            */}
           </div>
           <div>필터</div>
         </div>
       </section>
 
-      <section className="user-list-container" style={{ marginTop: '24px' }}>
+      <section className="user-list-container">
         <div className="um-list">
           <div className="um-list__header">
             <div>사진</div>
@@ -140,38 +131,38 @@ const UserManagement = () => {
             <div className="hide-sm">역할</div>
             <div className="hide-sm">그룹</div>
             <div className="hide-sm">전화번호</div>
-            <div>액션</div>
           </div>
-          {filteredUsers.map((u, i) => {
-            const initials = (u.name || '?').slice(0, 2);
+          {userList?.map((user, i) => {
+            const initials = (user.name || '?').slice(0, 2);
             return (
-              <div key={u.id || i} className="um-list__row">
+              <div key={user.id || i} className="um-list__row">
                 <div>
-                  <div className="um-avatar" aria-hidden>
-                    {u.profile_image_url ? <img src={u.profile_image_url} alt={u.name} /> : initials}
+                  <div
+                    className="um-avatar"
+                    aria-hidden
+                    onClick={() => handleUserDetail(user)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    {user.profile_image_url ? <img src={user.profile_image_url} alt={user.name} /> : initials}
                   </div>
                 </div>
-                <div className="um-name">{u.name || '-'}</div>
-                <div className="um-gender">{u.gender || '-'}</div>
-                <div className="um-role hide-sm">{u.role || '-'}</div>
-                <div className="um-group hide-sm">{u.group || '-'}</div>
-                <div className="um-phone hide-sm">{u.phone || '-'}</div>
-                <div className="um-actions">
-                  <button className="btn-ghost">상세</button>
+                <div className="um-name" onClick={() => handleUserDetail(user)} style={{ cursor: 'pointer' }}>
+                  {user.name || '-'}
                 </div>
+                <div className="um-gender">{(user.gender === 'male' ? '남자' : '여자') || '-'}</div>
+                <div className="um-role hide-sm">{user.user_roles[0].roles?.role_name || '-'}</div>
+                <div className="um-group hide-sm">{user.user_groups?.name || '-'}</div>
+                <div className="um-phone hide-sm">{user.phone || '-'}</div>
               </div>
             );
           })}
-          {filteredUsers.length === 0 && (
+          {userList?.length === 0 && (
             <div style={{ padding: '14px', color: 'var(--muted)' }}>표시할 유저가 없습니다.</div>
           )}
         </div>
       </section>
 
-      <section
-        className="pagination-container"
-        style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '2rem' }}
-      >
+      <section className="pagination-container">
         <button onClick={handlePageChange} disabled={pageNationInfo.currentPage === 1}>
           이전
         </button>
@@ -183,7 +174,7 @@ const UserManagement = () => {
          */}
         <button
           onClick={handlePageChange}
-          disabled={pageNationInfo.currentPage >= userList.count / pageNationInfo.pageSize}
+          disabled={pageNationInfo.currentPage >= userList.length / pageNationInfo.pageSize}
         >
           다음
         </button>
