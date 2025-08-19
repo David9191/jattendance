@@ -20,6 +20,7 @@ import PermissionManagement from './admin/features/permissions/pages/PermissionM
 import SecurityLogManagement from './admin/features/security-logs/pages/SecurityLogManagement';
 import Test from './tests/Test';
 import UserApprovalsManagement from './admin/features/users/components/UserApprovalsManagement';
+import UserDetail from './admin/features/users/components/UserDetail';
 
 const manageList = [
   {
@@ -33,6 +34,10 @@ const manageList = [
   {
     path: 'manage/user/approvals',
     element: <UserApprovalsManagement />,
+  },
+  {
+    path: 'manage/user/:id',
+    element: <UserDetail />,
   },
   {
     path: 'manage/department',
