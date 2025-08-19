@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { UserDepartment } from '../../../../common/contexts/DepartmentContext';
 import { getAverageAttendanceRate, getUserList, getMonthlyBirthdayMembers } from '../services/getUserList';
+import { useNavigate } from 'react-router-dom';
 import '../css/userManagement.css';
 
 const UserManagement = () => {
@@ -21,6 +22,7 @@ const UserManagement = () => {
   });
   const [searchName, setSearchName] = useState('');
   const { currentDepartmentInfo } = UserDepartment();
+  const navigate = useNavigate();
 
   const handleChangeSearchName = (e) => {
     setSearchName(e.target.value);
@@ -52,9 +54,9 @@ const UserManagement = () => {
 
   // 사용자 상세 보기
   const handleUserDetail = (user) => {
-    console.log('사용자 상세 정보:', user);
-    // TODO: 상세 모달 또는 페이지로 이동
-    alert(`${user.name}님의 상세 정보를 보여줍니다.`);
+    navigate(`${user.id}`, {
+      state: { user },
+    });
   };
 
   useEffect(() => {
